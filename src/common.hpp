@@ -1,8 +1,29 @@
-//
-// Created by 91931 on 07-07-2023.
-//
+#pragma once
 
-#ifndef TRANTOR_COMMON_HPP
-#define TRANTOR_COMMON_HPP
+#include <variant>
+#include <functional>
 
-#endif //TRANTOR_COMMON_HPP
+namespace trantor{
+    enum class LogLevel{
+        Error = 0,
+        Warning = 1,
+        Info = 2,
+        Debug = 3,
+    };
+
+    using Logger  = std::function<void(LogLevel, const char*)>;
+
+    struct Error{
+        Error(const char* err, int sqlite_result) : err(err), sqlite_result(sqlite_result) { }
+
+        const char* const err = nullptr;
+        int sqlite_result;
+
+        operator const char* () {
+            return err;
+        }
+    };
+
+    template<typename T>
+    using Maybe = std::variant<Error, T>;
+}
