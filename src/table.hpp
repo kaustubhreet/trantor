@@ -3,20 +3,21 @@
 #include "./common.hpp"
 #include <optional>
 
+
 namespace trantor{
     /**
      *
      * @tparam t
      * @tparam Column
      */
-    template <typename t, typename... Column>
+    template <typename T, typename... Column>
     class Table{
     public:
-        void printColumns(T &obj){
-            (
-                    [&]{
-                        std::cout<<"column: "<<Column::getter(obj) << std::endl;
-                    })(), ...);
+        void printColumns(T &obj) {
+            ([&]
+            {
+                std::cout << "column: " << Column::getter(obj) << std::endl;
+            }(), ...);
         }
 
         std::optional<Error> create(){

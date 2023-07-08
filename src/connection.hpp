@@ -1,8 +1,7 @@
 #pragma once
 
-#include <sqlite3.h>
 #include "./common.hpp"
-#include <functional>
+#include "../cmake-build-debug/vcpkg_installed/x64-windows/include/sqlite3.h"
 #include <sstream>
 
 namespace trantor {
@@ -43,7 +42,7 @@ namespace trantor {
             }
         }
 
-        Connection(Connection&& old) {
+        Connection(Connection&& old) noexcept {
             _logger = old._logger;
             old._logger = [](auto...) {};
             _db_handle = old._db_handle;

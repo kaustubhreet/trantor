@@ -2,6 +2,7 @@
 #include "src/connection.hpp"
 #include "src/table.hpp"
 
+
 void logger(trantor::LogLevel level, const char* msg) {
     std::cout << "connection logger (" << (int)level << "): ";
     std::cout << msg << std::endl;
