@@ -2,14 +2,11 @@
 
 #include "common.hpp"
 #include <optional>
+#include <algorithm>
 
 
 namespace trantor{
-    /**
-     *
-     * @tparam t
-     * @tparam Column
-     */
+
     template <typename T, typename... Column>
     class Table{
     public:
@@ -26,16 +23,21 @@ namespace trantor{
     };
 }
 
-/**
- *
- * @tparam C
- * @tparam T
- * @tparam Getter
- * @tparam Setter
- */
-template <typename C, typename T, T (C::*Getter)(), void (C::*Setter)(T)>
+template <size_t N>
+struct ColumnName{
+    constexpr ColumnName(const char (&str)[N]) {
+        std::copy_n(str, N, value);
+    }
+
+    char value[N];
+};
+
+template <ColumnName columnName, typename C, typename T, T (C::*Getter)(), void (C::*Setter)(T)>
 class ColumnPrivate{
 public:
+    static constexpr const char* name(){
+        return columnName.value;
+    }
     static auto getter(C obj){
         return (obj.*Getter)();
     };
@@ -45,15 +47,13 @@ public:
     };
 };
 
-/**
- * @brief
- * @tparam C
- * @tparam T
- * @tparam value
- */
-template <typename C, typename T, T (C::*value)>
+
+template <ColumnName columnName, typename C, typename T, T (C::*value)>
 class Column{
 public:
+    static constexpr const char* name(){
+        return columnName.value;
+    }
     static auto getter(C obj){
         return obj.*value;
     };

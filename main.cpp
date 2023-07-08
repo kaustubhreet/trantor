@@ -30,8 +30,8 @@ int main (void) {
     std::cout << "yeah" << std::endl;
 
     Table<User,
-        ColumnPrivate<User, int, &User::getId, &User::setId>,
-        ColumnPrivate<User, std::string, &User::getName, &User::setName> > tablePriv;
+        ColumnPrivate<"id", User, int, &User::getId, &User::setId>,
+        ColumnPrivate<"name", User, std::string, &User::getName, &User::setName> > tablePriv;
 
     User u;
     u.setId(100);
@@ -41,8 +41,8 @@ int main (void) {
     tablePriv.printColumns(u);
 
     Table<User,
-        Column<User, int, &User::_id>,
-        Column<User, std::string, &User::_name> > table;
+        Column<"id", User, int, &User::_id>,
+        Column<"name", User, std::string, &User::_name> > table;
 
     std::cout << "public columns:" << std::endl;
     table.printColumns(u);
