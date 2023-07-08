@@ -1,8 +1,8 @@
 #pragma once
 
-#include "./common.hpp"
-#include "../cmake-build-debug/vcpkg_installed/x64-windows/include/sqlite3.h"
+#include "common.hpp"
 #include <sstream>
+#include <sqlite3.h>
 
 namespace trantor {
     class Connection {

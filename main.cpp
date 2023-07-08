@@ -1,6 +1,6 @@
 #include <iostream>
-#include "src/connection.hpp"
-#include "src/table.hpp"
+#include "include/connection.hpp"
+#include "include/table.hpp"
 
 
 void logger(trantor::LogLevel level, const char* msg) {
