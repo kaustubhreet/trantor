@@ -8,7 +8,10 @@
 
 namespace trantor{
 
-    template <FixedLengthString tableName, typename T, typename... Column>
+    template <typename Column, typename Table>
+    concept ColumnBelongingToClass = std::is_same<typename Column::ObjectClass, Table>::value;
+
+    template <FixedLengthString tableName, typename T, ColumnBelongingToClass<T>... Column>
     class Table{
     public:
         void printColumns(T &obj) {
