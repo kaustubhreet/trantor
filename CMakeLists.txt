@@ -10,8 +10,9 @@ elseif (${CMAKE_CXX_STANDARD} LESS 20)
 endif ()
 
 find_package(SQLite3 REQUIRED)
-add_executable(demo main.cpp)
 
 add_library(${PROJECT_NAME} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_include_directories(${PROJECT_NAME} INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")
-target_link_libraries(demo PRIVATE SQLite::SQLite3)
+
+find_package(SQLite3 REQUIRED)
+target_link_libraries(${PROJECT_NAME} INTERFACE SQLite::SQLite3)
