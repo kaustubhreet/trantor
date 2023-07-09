@@ -64,3 +64,11 @@ TEST_F(TableTest, ColumnPrivate){
     ASSERT_EQ(table.columnName(0), "id");
     ASSERT_EQ(table.columnName(1), "name");
 }
+
+TEST_F(TableTest, CreateTableQuery){
+    using table_t = Table<"test", Object,
+            Column<"id", &Object::_id>,
+            Column<"name", &Object::_name> >;
+
+    std::cout << table_t::createTableQuery();
+}

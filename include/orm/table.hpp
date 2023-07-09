@@ -25,7 +25,24 @@ namespace trantor{
            return name;
         }
 
+        static constexpr int numberOfColumns(){
+            return std::tuple_size(std::tuple<Column...>());
+        }
+
         std::optional<Error> create() { return std::nullopt; }
+
+        static std::string createTableQuery() {
+            std::ostringstream query;
+
+            query<<"CREATE TABLE "<<tableName.value<<" (" <<std::endl;
+            ([&]{
+                query << '\t' << Column::name()<< " "<<Column::type()<<", "<< std::endl;
+            }(), ...);
+
+            query << ");" << std::endl;
+
+            return query.str();
+        }
     };
 }
 
