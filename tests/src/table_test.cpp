@@ -38,7 +38,7 @@ struct Object{
 };
 
 TEST_F(TableTest, Columns){
-    Table<Object,
+    Table<"test", Object,
         Column<"id", &Object::_id>,
         Column<"name", &Object::_name> > table;
 
@@ -46,10 +46,13 @@ TEST_F(TableTest, Columns){
     o.setId(10);
     o.setName("Steve");
     table.printColumns(o);
+
+    ASSERT_EQ(table.columnName(0), "id");
+    ASSERT_EQ(table.columnName(1), "name");
 }
 
 TEST_F(TableTest, ColumnPrivate){
-    Table<Object,
+    Table<"test", Object,
         ColumnPrivate<"id", &Object::getId, &Object::setId>,
         ColumnPrivate<"name", &Object::getName, &Object::setName> > table;
 
@@ -57,4 +60,7 @@ TEST_F(TableTest, ColumnPrivate){
     o.setId(100);
     o.setName("Steve");
     table.printColumns(o);
+
+    ASSERT_EQ(table.columnName(0), "id");
+    ASSERT_EQ(table.columnName(1), "name");
 }
