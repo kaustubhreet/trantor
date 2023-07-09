@@ -1,8 +1,9 @@
 #pragma once
 
-#include "common.hpp"
+#include "../common.hpp"
 #include <optional>
 #include <algorithm>
+#include <iostream>
 
 
 namespace trantor{
@@ -32,33 +33,33 @@ struct ColumnName{
     char value[N];
 };
 
-template <ColumnName columnName, typename C, typename T, T (C::*Getter)(), void (C::*Setter)(T)>
+template <ColumnName columnName, auto Getter, auto Setter>
 class ColumnPrivate{
 public:
     static constexpr const char* name(){
         return columnName.value;
     }
-    static auto getter(C obj){
+    static auto getter(auto obj){
         return (obj.*Getter)();
     };
 
-    static void setter(C obj, T arg){
+    static void setter(auto obj, auto arg){
         obj.*Setter(arg);
     };
 };
 
 
-template <ColumnName columnName, typename C, typename T, T (C::*value)>
+template <ColumnName columnName, auto M>
 class Column{
 public:
     static constexpr const char* name(){
         return columnName.value;
     }
-    static auto getter(C obj){
-        return obj.*value;
+    static auto getter(auto obj){
+        return obj.*M;
     };
 
-    static void setter(C obj, T arg){
-        obj.*value = arg;
+    static void setter(auto obj, auto arg){
+        obj.*M = arg;
     };
 };

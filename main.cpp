@@ -1,6 +1,5 @@
 #include <iostream>
-#include "include/connection.hpp"
-#include "include/table.hpp"
+#include "include/orm/connection.hpp"
 
 
 void logger(trantor::LogLevel level, const char* msg) {
@@ -29,21 +28,5 @@ int main (void) {
     Connection myConn = std::move(std::get<Connection>(createdConn));
     std::cout << "yeah" << std::endl;
 
-    Table<User,
-        ColumnPrivate<"id", User, int, &User::getId, &User::setId>,
-        ColumnPrivate<"name", User, std::string, &User::getName, &User::setName> > tablePriv;
 
-    User u;
-    u.setId(100);
-    u.setName("Steve");
-
-    std::cout << "private columns:" << std::endl;
-    tablePriv.printColumns(u);
-
-    Table<User,
-        Column<"id", User, int, &User::_id>,
-        Column<"name", User, std::string, &User::_name> > table;
-
-    std::cout << "public columns:" << std::endl;
-    table.printColumns(u);
 }
