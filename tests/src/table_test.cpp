@@ -57,17 +57,20 @@ TEST_F(TableTest, Columns){
 TEST_F(TableTest, ColumnPrivate){
     tablepriv_t table;
 
+    //table.printTable();
+
     ASSERT_EQ(table.columnName(0), "id");
     ASSERT_EQ(table.columnName(1), "name");
 }
 
 TEST_F(TableTest, CreateTableQuery){
-    std::string query = table_t::createTableQuery();
+    std::string query = table_t::createTableQuery(false);
+    std::cout<<query;
     std::regex reg("\\s+");
     auto trimmed = std::regex_replace(query, reg, " ");
 
     ASSERT_EQ(trimmed, "CREATE TABLE test ( id INTEGER, name TEXT );");
 
-    std::string same = tablepriv_t::createTableQuery();
+    std::string same = tablepriv_t::createTableQuery(false);
     ASSERT_EQ(same, query);
 }

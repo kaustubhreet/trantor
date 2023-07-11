@@ -15,25 +15,6 @@ namespace trantor{
     template <FixedLengthString tableName, typename T, ColumnBelongingToClass<T>... Column>
     class Table{
     public:
-        static constexpr void printTable() {
-            int i = 0;
-            std::cout << "Table: " << type_name<Table<tableName, T, Column...>>() << std::endl;
-
-            std::cout << "name: " << tableName.value << std::endl;
-
-            ([&]{
-                std::cout
-                << "column[" << i << "]:"
-                << Column::name() << " | "
-                << type_name<typename Column::MemberType>() << " | "
-                << MemberTypeToSqlType<typename Column::MemberType>::value << " | "
-                << std::endl;
-
-                i++;
-            }(), ...);
-
-        }
-
        static constexpr std::string columnName(int index){
             int i = 0;
             std::string name;
@@ -44,16 +25,17 @@ namespace trantor{
            return name;
         }
 
-        static constexpr int numberOfColumns(){
-            return std::tuple_size(std::tuple<Column...>());
-        }
+        static constexpr int numberOfColumns = std::tuple_size(std::tuple<Column...>());
 
         std::optional<Error> create() { return std::nullopt; }
 
-        static std::string createTableQuery() {
+        static std::string createTableQuery(bool ifNotExist) {
             std::ostringstream query;
 
-            query<<"CREATE TABLE "<<tableName.value<<" (" <<std::endl;
+            query<<"CREATE TABLE ";
+            if(ifNotExist)
+                    query << "IF NOT EXIST ";
+            query<<tableName.value<<" (" <<std::endl;
             ([&]{
                 query << '\t'
                 << Column::name()<< " "
