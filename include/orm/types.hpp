@@ -33,6 +33,28 @@ namespace trantor{
     }
 
 
+    enum class order_t{
+        NONE,
+        ASC,
+        DESC
+    };
+
+    static constexpr const char* orderStr(order_t t){
+        switch (t) {
+            case order_t::NONE: {
+                return "";
+            }
+            case order_t::ASC: {
+                return "ASC";
+            }
+            case order_t::DESC: {
+                 return "DESC";
+            }
+
+        }
+    }
+
+
     template<typename T>
     struct MemberTypeToSqlType{
         static constexpr const sql_type_t value = sql_type_t::BLOB;
