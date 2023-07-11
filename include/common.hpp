@@ -38,7 +38,7 @@ namespace trantor{
     };
 
     template <typename T>
-    constexpr auto type_name() {
+    consteval auto type_name() {
         std::string_view name, prefix, suffix;
 #ifdef defined(__clang__)
         name = __PRETTY_FUNCTION__;

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <filesystem>
 #include "trantor.hpp"
+#include <regex>
 
 using namespace trantor;
 
@@ -29,7 +30,7 @@ protected:
 };
 
 struct Object{
-    int _id;
+    int _id = 0;
     std::string _name;
     auto getId() { return _id; }
     void setId(int id) { _id = id; }
@@ -37,38 +38,36 @@ struct Object{
     void setName(std::string name) { _name = name; }
 };
 
-TEST_F(TableTest, Columns){
-    Table<"test", Object,
-        Column<"id", &Object::_id>,
-        Column<"name", &Object::_name> > table;
+using table_t = Table<"test", Object,
+    Column<"id", &Object::_id>,
+    Column<"name", &Object::_name>>;
 
-    Object o;
-    o.setId(10);
-    o.setName("Steve");
-    table.printColumns(o);
+using tablepriv_t = Table<"test", Object,
+        Column<"id", &Object::getId, &Object::setId>,
+        Column<"name", &Object::getName, &Object::setName>>;
+
+
+TEST_F(TableTest, Columns){
+    table_t table;
 
     ASSERT_EQ(table.columnName(0), "id");
     ASSERT_EQ(table.columnName(1), "name");
 }
 
 TEST_F(TableTest, ColumnPrivate){
-    Table<"test", Object,
-        ColumnPrivate<"id", &Object::getId, &Object::setId>,
-        ColumnPrivate<"name", &Object::getName, &Object::setName> > table;
-
-    Object o;
-    o.setId(100);
-    o.setName("Steve");
-    table.printColumns(o);
+    tablepriv_t table;
 
     ASSERT_EQ(table.columnName(0), "id");
     ASSERT_EQ(table.columnName(1), "name");
 }
 
 TEST_F(TableTest, CreateTableQuery){
-    using table_t = Table<"test", Object,
-            Column<"id", &Object::_id>,
-            Column<"name", &Object::_name> >;
+    std::string query = table_t::createTableQuery();
+    std::regex reg("\\s+");
+    auto trimmed = std::regex_replace(query, reg, " ");
 
-    std::cout << table_t::createTableQuery();
+    ASSERT_EQ(trimmed, "CREATE TABLE test ( id INTEGER, name TEXT );");
+
+    std::string same = tablepriv_t::createTableQuery();
+    ASSERT_EQ(same, query);
 }
