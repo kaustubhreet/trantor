@@ -29,7 +29,7 @@ namespace trantor{
             }
             case conflict_t::REPLACE: {
                 return "REPLACE";
-            };
+            }
 
             return "unknown conflict";
 
@@ -59,7 +59,7 @@ namespace trantor{
             }
             case action_t::CASCADE: {
                 return "CASCADE";
-            };
+            }
 
                 return "unknown conflict";
 

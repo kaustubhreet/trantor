@@ -55,6 +55,12 @@ using table_with_constraint_t = Table<"test_constraints", Object,
     Column<"name", &Object::_name, column_constraint::NotNull<>, column_constraint::Unique<>>,
     Column<"text", &Object::_someText, column_constraint::Unique<conflict_t::REPLACE>> >;
 
+using table_with_fk_constraint_t = Table<"test_fk_constraints", Object,
+    Column<"id", &Object::_id, column_constraint::PrimaryKey<conflict_t::ABORT>>,
+    Column<"name", &Object::_name, column_constraint::NotNull<>>,
+    Column<"text", &Object::_someText, column_constraint::Unique<conflict_t::REPLACE>>,
+    Column<"someId", &Object::_someId, column_constraint::ForeignKey<column_constraint::Reference<"test", "id">, action_t::CASCADE, action_t::RESTRICT> > >;
+
 
 TEST_F(TableTest, Columns){
     table_t table;
@@ -97,6 +103,20 @@ TEST_F(TableTest, CreateWithConstraintsTableQuery){
                            "id INTEGER PRIMARY KEY ON CONFLICT ABORT, "
                            "name TEXT NOT NULL ON CONFLICT ABORT UNIQUE ON CONFLICT ABORT, "
                            "text TEXT UNIQUE ON CONFLICT REPLACE "
+                           ");";
+    ASSERT_EQ(trimmed, expected);
+}
+
+TEST_F(TableTest, CreateWithFKConstraintsTableQuery){
+    std::string query = table_with_fk_constraint_t::createTableQuery(false);
+    std::cout<<query;
+    std::regex reg("\\s+");
+    auto trimmed = std::regex_replace(query, reg, " ");
+    std::string expected = "CREATE TABLE test_fk_constraints ( "
+                           "id INTEGER PRIMARY KEY ON CONFLICT ABORT, "
+                           "name TEXT NOT NULL ON CONFLICT ABORT, "
+                           "text TEXT UNIQUE ON CONFLICT REPLACE, "
+                           "someId INTEGER REFERENCES `test` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT "
                            ");";
     ASSERT_EQ(trimmed, expected);
 }
