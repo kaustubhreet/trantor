@@ -39,7 +39,13 @@ namespace trantor{
             ([&]{
                 query << '\t'
                 << Column::name()<< " "
-                << sqlTypesStr(Column::SQLMemberType) << "," <<std::endl;
+                << sqlTypesStr(Column::SQLMemberType);
+
+                auto constraints = Column::creationConstraints();
+                if(!constraints.empty()){
+                    query << " " << constraints;
+                }
+                query << "," <<std::endl;
             }(), ...);
 
             std::string qstr = query.str();
