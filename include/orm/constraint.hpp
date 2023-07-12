@@ -5,6 +5,7 @@
 #include <sstream>
 
 namespace trantor{
+
     enum class conflict_t {
         ABORT,
         ROLLBACK,
@@ -12,7 +13,6 @@ namespace trantor{
         IGNORE,
         REPLACE
     };
-
     static constexpr const char* conflictStr(conflict_t t){
         switch(t){
             case conflict_t::ABORT: {
@@ -36,6 +36,36 @@ namespace trantor{
         }
     }
 
+    enum class action_t {
+        NO_ACTION,
+        RESTRICT,
+        SET_NULL,
+        SET_DEFAULT,
+        CASCADE
+    };
+    static constexpr const char* actionStr(action_t t){
+        switch(t){
+            case action_t::NO_ACTION: {
+                return "NO_ACTION";
+            }
+            case action_t::RESTRICT: {
+                return "RESTRICT";
+            }
+            case action_t::SET_NULL: {
+                return "SET_NULL";
+            }
+            case action_t::SET_DEFAULT: {
+                return "SET_DEFAULT";
+            }
+            case action_t::CASCADE: {
+                return "CASCADE";
+            };
+
+                return "unknown conflict";
+
+        }
+    }
+
     namespace column_constraint{
         template<FixedLengthString value>
         struct Default{
@@ -51,6 +81,35 @@ namespace trantor{
             static const std::string to_string(){
                 std::stringstream ss;
                 ss << "COLLATE '" << value.value << "'";
+                return ss.str();
+            }
+        };
+
+        template<FixedLengthString tableName, FixedLengthString... column>
+        struct Reference{
+            static std::string to_string(){
+                std::stringstream ss;
+                ss <<"REFERENCES `" << tableName.value << "` (";
+                ([&]{
+                    ss << "`" << column.value << "`, ";
+                }(),...);
+
+                std::string str = ss.str();
+                str.erase(str.end() - 2, str.end());
+
+                return str + ")";
+            }
+        };
+
+        // TODO: support deferrabe
+        template<typename Reference, action_t onUpdate = action_t::NO_ACTION, action_t onDelete = action_t::NO_ACTION>
+        struct ForeignKey{
+            static std::string to_string(){
+                std::stringstream ss;
+                ss << Reference::to_string()
+                <<" ON UPDATE " << actionStr(onUpdate)
+                <<" ON DELETE " << actionStr(onDelete);
+
                 return ss.str();
             }
         };
