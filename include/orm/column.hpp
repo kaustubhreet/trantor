@@ -79,12 +79,13 @@ namespace trantor{
         static std::string creationConstraints() {
             std::stringstream ss;
             ([&]{
-                ss << Constraint::query() << ",";
+                ss << Constraint::query() << " ";
             }(),...);
 
             std::string qstr = ss.str();
 
-            if(qstr.size() >= 2)    qstr.erase(qstr.end() - 1);
+            if(qstr.size() >= 2)
+                qstr.erase(qstr.end() - 1);
 
             return qstr;
         }
@@ -119,7 +120,7 @@ namespace trantor{
         using MemberType = find_column_type<decltype(M)>::type;
 
         static_assert(!std::is_same<MemberType, std::false_type>::value,
-                      "Column template argument should be a pointer to a class memebr");
+                      "Column template argument should be a pointer to a class member");
 
         using ObjectClass = find_column_type<decltype(M)>::klass;
 
@@ -138,7 +139,7 @@ namespace trantor{
         static std::string creationConstraints() {
             std::stringstream ss;
             ([&]{
-                ss << Constraint::to_string() << ",";
+                ss << Constraint::to_string() << " ";
             }(),...);
 
             std::string qstr = ss.str();

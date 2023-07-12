@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../common.hpp"
+#include "column.hpp"
 #include "types.hpp"
 #include <optional>
 #include <algorithm>
@@ -25,7 +26,7 @@ namespace trantor{
            return name;
         }
 
-        static constexpr int numberOfColumns = std::tuple_size(std::tuple<Column...>());
+        static constexpr auto numberOfColumns = sizeof...(Column);
 
         std::optional<Error> create() { return std::nullopt; }
 

@@ -13,7 +13,7 @@ namespace trantor{
         REPLACE
     };
 
-    static constexpr char* conflictStr(conflict_t t){
+    static constexpr const char* conflictStr(conflict_t t){
         switch(t){
             case conflict_t::ABORT: {
                 return "ABORT";
@@ -59,7 +59,7 @@ namespace trantor{
         struct ConstraintWithConflictClause{
             static std::string to_string(){
                 std::stringstream ss;
-                ss << constraint.value << "ON CONFLICT" << conflictStr(onConflict);
+                ss << constraint.value << " ON CONFLICT " << conflictStr(onConflict);
                 return ss.str();
             }
         };
