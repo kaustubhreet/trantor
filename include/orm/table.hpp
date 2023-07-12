@@ -2,6 +2,7 @@
 
 #include "../common.hpp"
 #include "column.hpp"
+#include "constraint.hpp"
 #include "types.hpp"
 #include <optional>
 #include <algorithm>
@@ -53,6 +54,15 @@ namespace trantor{
             qstr.erase(qstr.end() -2);
 
             return qstr + " );";
+        }
+
+        static std::string findQuery(){
+            std::ostringstream ss;
+            ss << "SELECT * FROM `" << tableName.value << "` "
+            << "WHERE `" << column_constraint::PrimaryKey<>::to_string()
+            << "` = ?;";
+
+            return ss.str();
         }
     };
 }
