@@ -150,7 +150,7 @@ public:
     using MemberType = find_column_type<decltype(M)>::type;
 
     static_assert(!std::is_same<MemberType, std::false_type>::value,
-            "Column template argument should be a pointer to a class memebr");
+            "Column template argument should be a pointer to a class member");
 
     using ObjectClass = find_column_type<decltype(M)>::klass;
 
