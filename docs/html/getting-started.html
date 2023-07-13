@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Getting started | Trantor</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon-dark.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">Trantor</a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li><a href="pages.html">Pages</a></li>
+            <li><a href="namespaces.html">Namespaces</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="annotated.html">Classes</a></li>
+            <li><a href="files.html">Files</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          Getting started
+        </h1>
+        <p>Get started with <a href="namespace_magnum.html" class="m-doc">Magnum</a> using a bootstrap project.</p>
+        <nav class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              <a href="#getting-started-bootstrap">1. Download the bootstrap project</a>
+              <ul>
+                <li><a href="#getting-started-setup-subproject">1a. Option A: add Magnum as a CMake subproject</a></li>
+                <li><a href="#getting-started-setup-install">1b. Option B: install Magnum separately and let CMake find it</a></li>
+              </ul>
+            </li>
+            <li><a href="#getting-started-review">2. Review project structure</a></li>
+            <li>
+              <a href="#getting-started-build">3. Build the project</a>
+              <ul>
+                <li><a href="#getting-started-build-linux">Linux, macOS and other Unix-based OSes</a></li>
+                <li><a href="#getting-started-build-windows">Windows</a></li>
+              </ul>
+            </li>
+            <li><a href="#getting-started-run">4. Run the application</a></li>
+            <li><a href="#getting-started-glfw">Using GLFW and other toolkits instead of SDL2</a></li>
+            <li><a href="#getting-started-tutorials">Follow tutorials and learn the principles</a></li>
+            <li><a href="#getting-started-more">Additional information</a></li>
+          </ul>
+        </nav>
+<p>Setting up a new project can be pretty gruesome and nobody likes repeating the same process every time. <a href="namespace_magnum.html" class="m-doc">Magnum</a> provides &quot;bootstrap&quot; project structures for many target uses with the essentials and best practices laid out. This guide, as well as <a href="namespace_magnum.html" class="m-doc">Magnum</a> itself, uses the CMake build system.</p><section id="getting-started-bootstrap"><h2><a href="#getting-started-bootstrap">1. Download the bootstrap project</a></h2><p>The <a href="https://github.com/mosra/magnum-bootstrap">bootstrap repository</a> is located on GitHub. The <code>master</code> branch contains just a README file and the actual bootstrap projects are in various other branches, each covering some particular use case. For the first project you&#x27;ll need the <code>base</code> branch, which contains only the essential files. Download the branch as an archive and extract it somewhere:</p><p>@m_div{m-button m-primary} <a href="https://github.com/mosra/magnum-bootstrap/archive/base.zip">@m_<wbr />div{m-big}base.zip@m_<wbr />enddiv @m_<wbr />div{m-small} download the project @m_<wbr />enddiv</a> @m_enddiv</p><section id="getting-started-setup-subproject"><h3><a href="#getting-started-setup-subproject">1a. Option A: add Magnum as a CMake subproject</a></h3><p>The easiest option to start without having to install anything is adding all dependencies as CMake subprojects. While it has an advantage of making your project nicely self-contained, it&#x27;ll make your full rebuild times longer compared to magnum installed separately. For an alternative, see <a href="getting-started.html#getting-started-setup-install" class="m-doc">1b. Option B: install Magnum separately and let CMake find it</a> below. Clone the Corrade and <a href="namespace_magnum.html" class="m-doc">Magnum</a> sources like this (or use <code>git submodule add</code>, if you already have a Git repository):</p><pre class="m-code"><span class="nb">cd</span><span class="w"> </span>/path/to/the/extracted/bootstrap/project
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mosra/corrade.git
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/mosra/magnum.git</pre><p>Then open the <code>CMakeLists.txt</code> file in the root of the bootstrap project and add these two new subdirectories using @cmake add_subdirectory() @ce so the file looks like below. The <code>EXCLUDE_FROM_ALL</code> argument ensures only the parts you actually use are built (and excluding the subdirectory from the <code>install</code> target as well).</p><pre class="m-code"><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.4</span><span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span><span class="s">MyApplication</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_MODULE_PATH</span><span class="w"> </span><span class="s2">&quot;${PROJECT_SOURCE_DIR}/modules/&quot;</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_MODULE_PATH</span><span class="o">}</span><span class="p">)</span>
+
+<span class="c"># Add Corrade as a subproject</span>
+<span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">corrade</span><span class="w"> </span><span class="s">EXCLUDE_FROM_ALL</span><span class="p">)</span>
+
+<span class="c"># Add Magnum as a subproject, enable Sdl2Application</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">MAGNUM_WITH_SDL2APPLICATION</span><span class="w"> </span><span class="s">ON</span><span class="w"> </span><span class="s">CACHE</span><span class="w"> </span><span class="s">BOOL</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="s">FORCE</span><span class="p">)</span>
+<span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">magnum</span><span class="w"> </span><span class="s">EXCLUDE_FROM_ALL</span><span class="p">)</span>
+
+<span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">src</span><span class="p">)</span></pre><p>The last missing piece before you can continue is the <a href="http://libsdl.org/">SDL</a> library &mdash; the bootstrap project (and most examples) use it to do window management and event handling. If you are on Linux or macOS, you can get it easily from your package manager:</p><pre class="m-code">sudo<span class="w"> </span>pacman<span class="w"> </span>-S<span class="w"> </span>sdl2<span class="w">             </span><span class="c1"># on ArchLinux</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libsdl2-dev<span class="w">    </span><span class="c1"># on Ubuntu / Debian</span>
+brew<span class="w"> </span>install<span class="w"> </span>sdl2<span class="w">               </span><span class="c1"># on macOS (via Homebrew)</span></pre><p>If you are on Windows, by far the easiest is to bundle the prebuilt binaries into your project. Depending on whether you use Visual Studio or MinGW, download either <a href="https://www.libsdl.org/release/SDL2-devel-2.0.10-VC.zip">SDL2-devel-2.0.10-VC.zip</a> or <a href="https://www.libsdl.org/release/SDL2-devel-2.0.10-mingw.tar.gz">SDL2-devel-2.0.10-mingw.tar.gz</a>, extract the archive to root of the project and tell CMake where it is by adding the <code>SDL2-2.0.10</code> directory to <code>CMAKE_PREFIX_PATH</code>:</p><pre class="m-code"><span class="err">...</span>
+
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_PREFIX_PATH</span><span class="w"> </span><span class="o">${</span><span class="nv">PROJECT_SOURCE_DIR</span><span class="o">}</span><span class="s">/SDL2-2.0.10</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_PREFIX_PATH</span><span class="o">}</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">MAGNUM_WITH_SDL2APPLICATION</span><span class="w"> </span><span class="s">ON</span><span class="w"> </span><span class="s">CACHE</span><span class="w"> </span><span class="s">BOOL</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="s">FORCE</span><span class="p">)</span>
+<span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">magnum</span><span class="w"> </span><span class="s">EXCLUDE_FROM_ALL</span><span class="p">)</span></pre><p>This is of course not the only possibility &mdash; if you don&#x27;t feel like bundling the binaries, you can put them outside of the project and then specify <code>CMAKE_PREFIX_PATH</code> externally on the command line.</p></section><section id="getting-started-setup-install"><h3><a href="#getting-started-setup-install">1b. Option B: install Magnum separately and let CMake find it</a></h3><p>An alternative to the above is building &amp; installing <a href="namespace_magnum.html" class="m-doc">Magnum</a> separately. Both approaches are equally-well supported and each has its pros and cons &mdash; the subproject way shines when experimenting or when the project is developed on multiple workstations by multiple developers and you need to ensure the dependencies are the same version everywhere; while the separate installation makes sense when you have multiple projects depending on <a href="namespace_magnum.html" class="m-doc">Magnum</a> and want to integrate new upstream changes without having to update and compile it several times.</p><p>If you are lucky, you may already have <a href="namespace_magnum.html" class="m-doc">Magnum</a> packages ready for your platform:</p><ul><li>building-packages-hunter</li><li>building-packages-vcpkg</li><li>building-packages-arch</li><li>building-packages-msys</li><li>building-packages-deb</li><li>building-packages-gentoo</li><li>building-packages-brew</li></ul><p>If not, follow the full installation guides for Corrade and Magnum to build &amp; install everything; don&#x27;t forget to enable <code>MAGNUM_WITH_SDL2APPLICATION</code> when building <a href="namespace_magnum.html" class="m-doc">Magnum</a> so the bootstrap project can correctly find and use it. This is &quot;the hard way&quot; and it&#x27;s recommended only if you have at least some prior experience with building projects from source using CMake.</p><p>Compared to <a href="getting-started.html#getting-started-setup-subproject" class="m-doc">Option A</a>, you don&#x27;t need to clone the subprojects and modify the <code>CMakeLists.txt</code> file, however you&#x27;ll need to set <code>CMAKE_PREFIX_PATH</code> if you installed Corrade and <a href="namespace_magnum.html" class="m-doc">Magnum</a> to a non-standard location (i.e., anything else than <code>/usr</code> or <code>/usr/local</code> on Unix systems, and outside of the standard prefix if using MinGW on Windows).</p></section></section><section id="getting-started-review"><h2><a href="#getting-started-review">2. Review project structure</a></h2><p>The base project consists of just six files in two subfolders (plus the three extra directories with dependencies you might have added):</p><pre>modules/FindCorrade.cmake
+modules/FindMagnum.cmake
+modules/FindSDL2.cmake
+src/MyApplication.cpp
+src/CMakeLists.txt
+CMakeLists.txt
+</pre><p>In root there is the project-wide <code>CMakeLists.txt</code>, which you have seen above. It just sets up project name, specifies module directory and delegates everything important to <code>CMakeLists.txt</code> in the <code>src/</code> subdirectory.</p><p>The <code>modules/</code> directory contains CMake modules for finding the needed dependencies. These are needed mainly with externally installed dependencies (<a href="getting-started.html#getting-started-setup-install" class="m-doc">Option B</a> above), less so for the CMake subproject setup. Unlike modules for finding e.g. OpenGL, which are a part of the standard CMake installation, these aren&#x27;t and thus have to be distributed with the project. These files are verbatim copied from the <a href="https://github.com/mosra/magnum/tree/master/modules">modules/<wbr /></a> directory in the <a href="namespace_magnum.html" class="m-doc">Magnum</a> repository.</p><p>The <code>src/</code> directory contains the actual project. To keep things simple, the project consists of just a single <code>MyApplication.cpp</code> file with the most minimal code possible:</p><pre class="m-code"></pre><p>The application essentially does nothing, just clears the screen framebuffer to a dark gray color and then does buffer swap to actually display it on the screen. The <code>src/CMakeLists.txt</code> file finds <a href="namespace_magnum.html" class="m-doc">Magnum</a>, creates the executable and links all needed libraries to it:</p><pre class="m-code"><span class="nb">find_package</span><span class="p">(</span><span class="s">Magnum</span><span class="w"> </span><span class="s">REQUIRED</span><span class="w"> </span><span class="s">GL</span><span class="w"> </span><span class="s">Sdl2Application</span><span class="p">)</span>
+
+<span class="nb">set_directory_properties</span><span class="p">(</span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">CORRADE_USE_PEDANTIC_FLAGS</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
+
+<span class="nb">add_executable</span><span class="p">(</span><span class="s">MyApplication</span><span class="w"> </span><span class="s">MyApplication.cpp</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">MyApplication</span><span class="w"> </span><span class="s">PRIVATE</span>
+<span class="w">    </span><span class="s">Magnum::Application</span>
+<span class="w">    </span><span class="s">Magnum::GL</span>
+<span class="w">    </span><span class="s">Magnum::Magnum</span><span class="p">)</span></pre><p>The <code>CORRADE_USE_PEDANTIC_FLAGS</code> property enables a set of useful compiler warnings. It&#x27;s not required, but recommended to enforce good C++ coding practices.</p></section><section id="getting-started-build"><h2><a href="#getting-started-build">3. Build the project</a></h2><section id="getting-started-build-linux"><h3><a href="#getting-started-build-linux">Linux, macOS and other Unix-based OSes</a></h3><p>The application along with the subprojects is built using the following three commands &mdash; create an out-of-source build directory, run <code>cmake</code> to generate a project with a debug build type and then build everything.</p><pre class="m-code">mkdir<span class="w"> </span>-p<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+cmake<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Debug<span class="w"> </span>..
+cmake<span class="w"> </span>--build<span class="w"> </span>.</pre><p>By default, CMake generates Makefile projects on Unix platforms. You can change that to for example <a href="https://ninja-build.org/">Ninja</a> by running CMake with <code>-G Ninja</code>; on macOS you can generate an Xcode project in the build directory using <code>-G Xcode</code>. If you have CMake 3.15 or newer, the default generator can be changed using the <a href="https://cmake.org/cmake/help/v3.15/envvar/CMAKE_GENERATOR.html">CMAKE_<wbr />GENERATOR</a> environment variable.</p></section><section id="getting-started-build-windows"><h3><a href="#getting-started-build-windows">Windows</a></h3><p>On Windows you can use either Visual Studio or MinGW-w64. With Visual Studio the most straightforward way to generate the project file is by executing the below two commands in the Developer Command Prompt, you can also use CMake GUI &mdash; navigate it to the source directory, create a fresh build directory, select a generator and press @m_class{m-label m-default} <strong>Configure</strong> and @m_class{m-label m-default} <strong>Generate</strong>.</p><pre class="m-code"><span class="k">mkdir</span> build <span class="p">&amp;&amp;</span> <span class="k">cd</span> build
+cmake ..</pre><p>Once that&#x27;s done, open the <code>MyApplication.sln</code> project file generated by CMake in the <code>build/</code> directory (or in the CMake GUI, use the @m_class{m-label m-default} <strong>Open Project</strong> button).</p><p>With QtCreator just open project&#x27;s root <code>CMakeLists.txt</code> file. It then asks you where to create build directory, allows you to specify initial CMake parameters and then you can just press @m_class{m-label m-default} <strong>Configure</strong> and everything is ready to be built.</p></section></section><section id="getting-started-run"><h2><a href="#getting-started-run">4. Run the application</a></h2><p>If you went with the CMake subproject approach (<a href="getting-started.html#getting-started-setup-subproject" class="m-doc">Option A</a> above), the project is configured to place all binaries into a common location &mdash; the application will be placed in <code>Debug/bin/MyApplication</code> (on Windows along with all DLLs it needs), and libraries into <code>Debug/lib</code>; if you switch to a Release build, it&#x27;ll be <code>Release/bin</code> instead. If you went with externally installed <a href="namespace_magnum.html" class="m-doc">Magnum</a>, the executable gets placed into its default location in <code>src/MyApplication</code> and dependency libraries stay where CMake found them &mdash; on Windows you might need to adjust @cb{.sh} PATH% @ce to make the application run.</p><p>Once built, if everything went well and the application starts, you will see a blank window like this:</p><img class="m-image" src="getting-started.png" alt="Image" style="width: 410px;" /><p>Now you can try to change something in the code. Without going too deep into the concepts of graphics programming, we can change the clear color to something else and also print basic information about the GPU the engine is running on. First include the needed headers:</p><pre class="m-code"></pre><p>And in the constructor (which is currently empty) change the clear color and print something to debug output:</p><pre class="m-code"></pre><p>After rebuilding and starting the application, the clear color changes to blueish one and something like this would be printed to the console:</p><pre class="m-console"><span class="gp">$ </span>./MyApplication
+<span class="go">[...]</span>
+<span class="go">Hello! This application is running on OpenGL 4.5 using GeForce GT 740M</span></pre><img class="m-image" src="getting-started-blue.png" alt="Image" style="width: 410px;" /><p>The barebones application accepts various command-line arguments, pass <code>--magnum-help</code> to see them all. Depending on your platform, these can adjust HiDPI scaling, enable GPU command validation or for example switch to a different GPU device.</p><p>@m_class{m-block m-success}</p><aside class="m-note m-default"><h4>Making the executable a Windows application</h4><p>If you&#x27;re on Windows, you noticed that, unlike common graphical apps, the application has a terminal window lurking in the background. That&#x27;s because the default executable type in CMake is a console application. The terminal is useful for printing logs (as we just did), but if you don&#x27;t want it, it can be hidden by specifying @cb{.cmake} add_executable(... WIN32 ...) @ce and linking to the Corrade::Main library. Apart from this, the library does other useful things such as enabling Unicode-aware environment interaction on Windows.</p><pre class="m-code"><span class="nb">find_package</span><span class="p">(</span><span class="s">Corrade</span><span class="w"> </span><span class="s">REQUIRED</span><span class="w"> </span><span class="s">Main</span><span class="p">)</span>
+<span class="err">...</span>
+
+<span class="nb">add_executable</span><span class="p">(</span><span class="s">MyApplication</span><span class="w"> </span><span class="s">WIN32</span><span class="w"> </span><span class="s">MyApplication.cpp</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">MyApplication</span><span class="w"> </span><span class="s">PRIVATE</span>
+<span class="w">    </span><span class="s">Corrade::Main</span>
+<span class="w">    </span><span class="s">...</span><span class="p">)</span></pre></aside></section><section id="getting-started-glfw"><h2><a href="#getting-started-glfw">Using GLFW and other toolkits instead of SDL2</a></h2><p>By no means <a href="namespace_magnum.html" class="m-doc">Magnum</a> forces you to use SDL2 &mdash; it&#x27;s only the default. If you want to try it with other toolkits such as <a href="https://www.glfw.org/">GLFW</a> or <a href="https://www.qt.io/">Qt</a> there are similar projects in other branches of the <a href="https://github.com/mosra/magnum-bootstrap">bootstrap repository</a>. If you download <a href="https://github.com/mosra/magnum-bootstrap/archive/base-glfw.zip">base-glfw.zip</a>, you get a GLFW-based project. It&#x27;s mostly the same, with only minor differences. Enable <code>MAGNUM_WITH_GLFWAPPLICATION</code> instead of <code>MAGNUM_WITH_SDL2APPLICATION</code>, on Linux or Mac install one of the following packages:</p><pre class="m-code">sudo<span class="w"> </span>pacman<span class="w"> </span>-S<span class="w"> </span>glfw-x11<span class="w">         </span><span class="c1"># on ArchLinux</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>libglfw3-dev<span class="w">   </span><span class="c1"># on Ubuntu / Debian</span>
+brew<span class="w"> </span>install<span class="w"> </span>glfw<span class="w">               </span><span class="c1"># on macOS (via Homebrew)</span></pre><p>On Windows download either <a href="https://github.com/glfw/glfw/releases/download/3.3/glfw-3.3.bin.WIN32.zip">glfw-3.3.bin.WIN32.zip</a> or <a href="https://github.com/glfw/glfw/releases/download/3.3/glfw-3.3.bin.WIN64.zip">glfw-3.3.bin.WIN64.zip</a>, extract it to root of the bootstrap project and point <code>CMAKE_PREFIX_PATH</code> to it:</p><pre class="m-code"><span class="err">...</span>
+<span class="w">                                       </span><span class="c"># or glfw-3.3.bin.WIN32 here</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_PREFIX_PATH</span><span class="w"> </span><span class="o">${</span><span class="nv">PROJECT_SOURCE_DIR</span><span class="o">}</span><span class="s">/glfw-3.3.bin.WIN64</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_PREFIX_PATH</span><span class="o">}</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s">MAGNUM_WITH_GLFWAPPLICATION</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
+<span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">magnum</span><span class="w"> </span><span class="s">EXCLUDE_FROM_ALL</span><span class="p">)</span></pre><p>The rest is very similar to above. With the <code>Platform::*Application</code> classes, <a href="namespace_magnum.html" class="m-doc">Magnum</a> tries to have a common API for all toolkits to make switching from one to another easy, allowing you to choose the best fit for a particular platform. See platform for more information.</p></section><section id="getting-started-tutorials"><h2><a href="#getting-started-tutorials">Follow tutorials and learn the principles</a></h2><p>Now that you have your first application up and running, the best way to continue is to get familiar with the basic workflows and render your first triangle. Then you can dig deeper and try other examples, read about basic building blocks in the documentation and start experimenting on your own!</p><p>@m_class{m-row}</p><div><p>@m_div{m-col-t-8 m-push-t-2 m-col-s-6 m-push-s-0 m-col-m-4 m-push-m-1} @m_div{m-button m-info m-fullwidth} <a href="features.html">@m_<wbr />div{m-big}The Fundamentals@m_<wbr />enddiv @m_<wbr />div{m-small} make yourself comfortable first @m_<wbr />enddiv</a> @m_enddiv @m_enddiv</p><p>@m_div{m-col-t-8 m-push-t-2 m-col-s-6 m-push-s-0 m-col-m-4 m-push-m-3} @m_div{m-button m-success m-fullwidth} <a href="examples-triangle.html">@m_<wbr />div{m-big}Your First Triangle@m_<wbr />enddiv @m_<wbr />div{m-small} a step-by-step tutorial @m_<wbr />enddiv</a> @m_enddiv @m_enddiv</p></div></section><section id="getting-started-more"><h2><a href="#getting-started-more">Additional information</a></h2><ul><li>building &mdash;</li><li>building-plugins &mdash;</li><li>building-integration &mdash;</li><li>building-extras &mdash;</li><li>building-examples &mdash;</li><li>cmake &mdash;</li><li>cmake-plugins &mdash;</li><li>cmake-integration &mdash;</li><li>cmake-extras &mdash;</li><li>singles &mdash;</li><li>custom-buildsystems &mdash;</li></ul></section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v2.js"></script>
+<script src="searchdata-v2.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>Trantor. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.7 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>

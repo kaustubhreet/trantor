@@ -68,4 +68,26 @@ namespace trantor{
 }
 
 
+public:
+
+    using MemberType = find_column_type<decltype(M)>::type;
+
+    static_assert(!std::is_same<MemberType, std::false_type>::value,
+            "Column template argument should be a pointer to a class member");
+
+    using ObjectClass = find_column_type<decltype(M)>::klass;
+
+    static constexpr const char* name(){
+        return columnName.value;
+    }
+
+    static constexpr const char* type() {
+        return "INT";
+    }
+
+    static auto getter(auto obj){
+        return obj.*M;
+    };
+
+
 
