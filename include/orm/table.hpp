@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../common.hpp"
+#include "column.hpp"
+#include "constraint.hpp"
 #include "types.hpp"
 #include <optional>
 #include <algorithm>
@@ -25,7 +27,7 @@ namespace trantor{
            return name;
         }
 
-        static constexpr int numberOfColumns = std::tuple_size(std::tuple<Column...>());
+        static constexpr auto numberOfColumns = sizeof...(Column);
 
         std::optional<Error> create() { return std::nullopt; }
 
@@ -39,7 +41,13 @@ namespace trantor{
             ([&]{
                 query << '\t'
                 << Column::name()<< " "
-                << sqlTypesStr(Column::SQLMemberType) << "," <<std::endl;
+                << sqlTypesStr(Column::SQLMemberType);
+
+                auto constraints = Column::creationConstraints();
+                if(!constraints.empty()){
+                    query << " " << constraints;
+                }
+                query << "," <<std::endl;
             }(), ...);
 
             std::string qstr = query.str();
@@ -47,103 +55,18 @@ namespace trantor{
 
             return qstr + " );";
         }
+
+        static std::string findQuery(){
+            std::ostringstream ss;
+            ss << "SELECT * FROM `" << tableName.value << "` "
+            << "WHERE `" << column_constraint::PrimaryKey<>::to_string()
+            << "` = ?;";
+
+            return ss.str();
+        }
     };
 }
 
-
-template <trantor::FixedLengthString columnName, auto Getter, auto Setter= nullptr>
-class Column{
-private:
-    template<typename T>
-    struct resolve_function_ptr_types : std::false_type {
-        using argType = std::false_type;
-        using returnType = void;
-        using klass = std::false_type;
-    };
-
-    //pointer to setter
-    template<typename C, class A>
-    struct resolve_function_ptr_types<void (C::*)(A)> {
-        using argType = A;
-        using returnType = void;
-        using klass = C;
-    };
-
-    //pointer to getter
-    template<typename R, typename C>
-    struct resolve_function_ptr_types<R (C::*)()>
-    {
-        using argType = std::false_type;
-        using returnType = R;
-        using klass = C;
-    };
-
-    //pointer to member
-    template<typename R, typename C>
-    struct resolve_function_ptr_types<R C::*>
-    {
-        using argType = std::false_type;
-        using returnType = void;
-        using klass = std::false_type;
-    };
-
-    using SetterResolved = resolve_function_ptr_types<decltype(Setter)>;
-    using GetterResolved = resolve_function_ptr_types<decltype(Getter)>;
-
-    static_assert(!std::is_same<typename SetterResolved::argType, std::false_type>::value,
-                  "Column template argument should be a pointer to a class method that sets the column data");
-    static_assert(std::is_same<typename SetterResolved::returnType, void>::value,
-                  "Column template argument should be a pointer to a class method that sets the column data. The return type should be `void`");
-
-    static_assert(std::is_same<typename GetterResolved::argType, std::false_type>::value,
-                  "Column template argument should be a pointer to a class method that gets the column data");
-    static_assert(!std::is_same<typename GetterResolved::returnType, void>::value,
-                  "Column template argument should be a pointer to a class method that gets the column data. The return type should not be `void`");
-
-    static_assert(std::is_same<typename GetterResolved::returnType, typename SetterResolved::argType>::value,
-                  "Column template arguments should be a pointers to class methods that get and set the column data");
-
-public:
-
-    using MemberType = SetterResolved::argType;
-    using ObjectClass = SetterResolved::klass;
-
-    static constexpr const char* name(){
-        return columnName.value;
-    }
-
-    static constexpr trantor::sql_type_t SQLMemberType = trantor::MemberTypeToSqlType<MemberType>::value;
-
-    static auto getter(auto obj){
-        return (obj.*Getter)();
-    };
-
-    static void setter(auto obj, auto arg){
-        obj.*Setter(arg);
-    };
-};
-
-
-template <trantor::FixedLengthString columnName, auto M>
-class Column<columnName, M, nullptr>{
-private:
-    template<typename T>
-    struct find_column_type : std::false_type {
-        using type = std::false_type;
-    };
-
-    template<typename R, typename C, class A>
-    struct find_column_type<R (C::*)(A)>
-    {
-        using type = std::false_type;
-    };
-
-    template<typename R, typename C>
-    struct find_column_type<R C::*>
-    {
-        using type = R;
-        using klass = C;
-    };
 
 public:
 
@@ -166,9 +89,5 @@ public:
         return obj.*M;
     };
 
-    static void setter(auto obj, auto arg){
-        obj.*M = arg;
-    };
 
-    static constexpr trantor::sql_type_t SQLMemberType = trantor::MemberTypeToSqlType<MemberType>::value;
-};
+

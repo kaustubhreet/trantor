@@ -4,6 +4,16 @@
 #include <functional>
 #include <string_view>
 
+/**
+ * @dir include
+ * @brief Namespace @ref trantor
+ */
+
+/**
+    * @file
+    * @brief struct @ref Error
+    */
+
 namespace trantor{
     enum class LogLevel{
         Error = 0,
@@ -14,7 +24,24 @@ namespace trantor{
 
     using Logger  = std::function<void(LogLevel, const char*)>;
 
+    /**
+     * @brief structure to maintain Errors
+     */
+
     struct Error{
+        /**
+         * @brief Constructor
+         * @param storage           Storage of pixel data
+         * @param format            Format of pixel data
+         * @param size              Image size
+         * @param data              Image data
+         * @param flags             Image layout flags
+         *
+         * The @p data array is expected to be of proper size for given
+         * parameters. For a 3D image, if @p flags contain
+         * @ref ImageFlag3D::CubeMap, the @p size is expected to match its
+         * restrictions.
+         */
         Error(const char* err, int sqlite_result) : err(err), sqlite_result(sqlite_result) { }
 
         const char* const err = nullptr;

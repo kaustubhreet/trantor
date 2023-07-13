@@ -27,6 +27,8 @@ namespace trantor{
                     return "REAL";
                 }
 
+                return "not a supported type";
+
         }
 
         return "type not supported";
@@ -50,6 +52,8 @@ namespace trantor{
             case order_t::DESC: {
                  return "DESC";
             }
+
+            return "order not supported";
 
         }
     }
