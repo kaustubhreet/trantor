@@ -3,12 +3,16 @@
 #include "../common.hpp"
 #include <sstream>
 #include <sqlite3.h>
+#include <memory>
+#include <optional>
 
 namespace trantor {
+
+    template<typename... Table> requires (sizeof...(Table) > 0)
     class Connection {
     public:
 
-        static Maybe<Connection> Create(const char* fileName, int flags = 0, const char* zVfs = nullptr, Logger logger = nullptr) {
+        static Maybe<Connection<Table...>> CreateConnection(const char* fileName, int flags = 0, const char* zVfs = nullptr, Logger logger = nullptr) {
             if (!flags) {
                 flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE;
             }
