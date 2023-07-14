@@ -3,6 +3,7 @@
 #include <variant>
 #include <functional>
 #include <string_view>
+#include <sqlite3.h>
 
 /**
  * @dir include
@@ -42,13 +43,16 @@ namespace trantor{
          * @ref ImageFlag3D::CubeMap, the @p size is expected to match its
          * restrictions.
          */
-        Error(const char* err, int sqlite_result) : err(err), sqlite_result(sqlite_result) { }
+        Error(const char* const err, int sqlite_result) : err(err), sqlite_result(sqlite_result) { }
 
-        const char* const err = nullptr;
+        const char* err;
         int sqlite_result;
 
-        operator const char* () {
-            return err;
+        operator std::string () const{
+            const char* sqlError = sqlite3_errstr(sqlite_result);
+            std::string out = std::string(err) + ":" + std::string(sqlError);
+
+            return out;
         }
     };
 
