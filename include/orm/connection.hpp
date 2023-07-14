@@ -54,6 +54,28 @@ namespace trantor {
         };
 
         Connection& operator =(Connection&&) = default;
+
+        std::optional<Error> createTables(bool ifNotExist=true){
+            std::optional<Error> error = std::nullopt;
+
+            ([&]{
+                if(error)
+                    return;
+
+                std::string createQ = Table::createTableQuery(ifNotExist);
+                Statement s = {this, createQ};
+                error = s.error;
+                if(error)
+                    return;
+
+                error = s.step();
+
+            }(), ...);
+
+            return error;
+        }
+
+
     private:
         Connection(const Connection&) = delete;
         Connection operator =(const Connection&) = delete;
@@ -61,6 +83,52 @@ namespace trantor {
             if (logger) _logger = logger;
             else _logger = [](auto...) {};
         }
+
+        struct Statement{
+            Connection<Table...>* conn;
+            sqlite3_stmt* stmt;
+            std::optional<Error> error = std::nullopt;
+
+            Statement(Connection<Table*...> conn, std::string query) : conn{conn} {
+                conn->_logger(LogLevel::Debug, "Prepared Statement");
+                conn->_logger(LogLevel::Debug, query.c_str());
+
+                int result = sqlite3_prepare_v2(conn->_db_handle,
+                                                query.c_str(),
+                                                query.size() + 1,
+                                                &stmt,
+                                                nullptr);
+
+                if(result != SQLITE_OK){
+                    const char* str = sqlite3_errstr(result);
+                    conn->_logger(LogLevel::Error, "Unable to initialize Statement");
+                    conn->_logger(LogLevel::Error, str);
+
+                    error = Error("Unable to initialize Statement", result);
+
+                }
+            }
+
+            ~Statement(){
+                int result = sqlite3_finalize(stmt);
+                if(result != SQLITE_OK){
+                    const char* str = sqlite3_errstr(result);
+                    conn->_logger(LogLevel::Error, "Unable to finalize Statement");
+                    conn->_logger(LogLevel::Error, str);
+                }
+            }
+
+            std::optional<Error> step(){
+                int result = sqlite3_step(stmt);
+                if(result != SQLITE_OK && result != SQLITE_DONE){
+                    conn->_logger(LogLevel::Error, "Unable to execute Statement");
+                    return Error("Unable to execute statement", result);
+                }
+
+                return std::nullopt;
+            }
+        };
+
         sqlite3* _db_handle;
         Logger _logger = nullptr;
     };
