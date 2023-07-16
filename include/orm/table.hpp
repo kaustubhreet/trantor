@@ -7,6 +7,7 @@
 #include <optional>
 #include <algorithm>
 #include <iostream>
+#include <string>
 
 
 namespace trantor{
@@ -36,7 +37,7 @@ namespace trantor{
 
             query<<"CREATE TABLE ";
             if(ifNotExist)
-                    query << "IF NOT EXIST ";
+                    query << "IF NOT EXISTS ";
             query<<tableName.value<<" (" <<std::endl;
             ([&]{
                 query << '\t'

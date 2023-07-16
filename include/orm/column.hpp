@@ -77,10 +77,8 @@ namespace trantor{
         };
 
         static std::string creationConstraints() {
-            std::stringstream ss;
-            ([&]{
-                ss << Constraint::query() << " ";
-            }(),...);
+            std::ostringstream ss;
+            appendToStringStream<Constraint...>(ss, " ");
 
             std::string qstr = ss.str();
 
