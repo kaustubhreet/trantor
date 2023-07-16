@@ -1,21 +1,28 @@
 #pragma once
 
+/**
+    * @file common.hpp
+    * @brief Contains routines for common usage by other classes.
+    * @brief enum @ref trantor::LogLevel, struct @ref trantor::Error, struct @ref trantor::FixedLengthString, function @ref trantor::type_name()
+    *
+    */
+
 #include <variant>
 #include <functional>
 #include <string_view>
 #include <sqlite3.h>
 
-/**
- * @dir include
- * @brief Namespace @ref trantor
- */
 
-/**
-    * @file
-    * @brief struct @ref Error
-    */
+
 
 namespace trantor{
+
+    /**
+     * @enum LogLevel
+     *
+     * @brief Describes various levels of Log types
+     *
+     */
     enum class LogLevel{
         Error = 0,
         Warning = 1,
@@ -26,28 +33,27 @@ namespace trantor{
     using Logger  = std::function<void(LogLevel, const char*)>;
 
     /**
-     * @brief structure to maintain Errors
+     * @struct Error
+     *
+     * @brief Provides error logging and maintaining methods
      */
 
     struct Error{
         /**
          * @brief Constructor
-         * @param storage           Storage of pixel data
-         * @param format            Format of pixel data
-         * @param size              Image size
-         * @param data              Image data
-         * @param flags             Image layout flags
+         * @param err               error message
+         * @param sqlite_result     Code from the SQLite descriptor
          *
-         * The @p data array is expected to be of proper size for given
-         * parameters. For a 3D image, if @p flags contain
-         * @ref ImageFlag3D::CubeMap, the @p size is expected to match its
-         * restrictions.
          */
         Error(const char* const err, int sqlite_result) : err(err), sqlite_result(sqlite_result) { }
 
         const char* err;
         int sqlite_result;
 
+        /**
+         * @brief Parenthesis Operator Overload to output an elegant error string
+         * @return std::string error
+         */
         operator std::string () const{
             const char* sqlError = sqlite3_errstr(sqlite_result);
             std::string out = std::string(err) + ":" + std::string(sqlError);
@@ -59,6 +65,10 @@ namespace trantor{
     template<typename T>
     using Maybe = std::variant<Error, T>;
 
+    /**
+     * @brief Abstraction to store names of tables and columns
+     * @tparam N denotes the size of input size
+     */
     template<size_t N>
     struct FixedLengthString{
         constexpr FixedLengthString(const char (&str)[N]){

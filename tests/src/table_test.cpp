@@ -49,7 +49,7 @@ using MyConnection = Connection<table_t, tablepriv_t, table_with_constraint_t, t
 class TableTest : public ::testing::Test {
 protected:
     void SetUp() override{
-        auto createdConn = MyConnection::CreateConnection("test.db", 0, 0, &logger);
+        auto createdConn = MyConnection::create("test.db", 0, 0, &logger);
         if(!std::holds_alternative<MyConnection>(createdConn)) {
             throw "Unable to open connection";
         }
