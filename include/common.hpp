@@ -42,7 +42,7 @@ namespace trantor {
          * @param sqlite_result     Code from the SQLite descriptor
          *
          */
-        Error(const char *const err, int sqlite_result) : err(err), sqlite_result(sqlite_result) {}
+        Error(const char *const err, int sqlite_result=SQLITE_OK) : err(err), sqlite_result(sqlite_result) {}
 
         const char *err;
         int sqlite_result;
@@ -52,10 +52,13 @@ namespace trantor {
          * @return std::string error
          */
         operator std::string() const {
-            const char *sqlError = sqlite3_errstr(sqlite_result);
-            std::string out = std::string(err) + ":" + std::string(sqlError);
-
-            return out;
+            std::ostringstream out;
+            out << std::string(err);
+            if (sqlite_result != SQLITE_OK) {
+                const char* sqlErr = sqlite3_errstr(sqlite_result);
+                out <<": " + std::string(sqlErr);
+            }
+            return out.str();
         }
     };
 
@@ -110,4 +113,27 @@ namespace trantor {
         std::copy(strings.begin(), strings.end(),
                   std::ostream_iterator<std::string>(ss, delim));
     }
+
+    template<bool... T>
+    static constexpr bool AnyOf = (... || T);
+
+    template<bool... T>
+    static constexpr bool AllOf = (... && T);
+
+    template<bool... T>
+    struct IndexOfFirst {
+    private:
+        static constexpr int _impl() {
+            int i = 0;
+            int idx = -1;
+            ([&]{
+                i++;
+                if (T) idx = i;
+            }(), ...);
+
+            return idx;
+        }
+    public:
+        static constexpr int value = _impl();
+    };
 }
