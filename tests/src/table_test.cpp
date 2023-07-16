@@ -11,24 +11,6 @@ void logger(trantor::LogLevel level, const char* msg) {
     std::cout << msg << std::endl;
 }
 
-class TableTest : public ::testing::Test {
-protected:
-    void SetUp() override{
-        auto createdConn = Connection::Create("test.db", 0, 0, &logger);
-        if(!std::holds_alternative<Connection>(createdConn)) {
-            throw "Unable to open connection";
-        }
-
-        myConn = std::make_shared<Connection>(std::move(std::get<Connection>(createdConn)));
-    }
-
-    std::shared_ptr<Connection> myConn;
-
-    void TearDown() override{
-        myConn = nullptr;
-        std::filesystem::remove("test.db");
-    }
-};
 
 struct Object{
     int _id = 0;
@@ -61,6 +43,27 @@ using table_with_fk_constraint_t = Table<"test_fk_constraints", Object,
     Column<"text", &Object::_someText, column_constraint::Unique<conflict_t::REPLACE>>,
     Column<"someId", &Object::_someId, column_constraint::ForeignKey<column_constraint::Reference<"test", "id">, action_t::CASCADE, action_t::RESTRICT> > >;
 
+using MyConnection = Connection<table_t, tablepriv_t, table_with_constraint_t, table_with_fk_constraint_t>;
+
+
+class TableTest : public ::testing::Test {
+protected:
+    void SetUp() override{
+        auto createdConn = MyConnection::CreateConnection("test.db", 0, 0, &logger);
+        if(!std::holds_alternative<MyConnection>(createdConn)) {
+            throw "Unable to open connection";
+        }
+
+        myConn = std::make_shared<MyConnection>(std::move(std::get<MyConnection>(createdConn)));
+    }
+
+    std::shared_ptr<MyConnection> myConn;
+
+    void TearDown() override{
+        myConn = nullptr;
+        std::filesystem::remove("test.db");
+    }
+};
 
 TEST_F(TableTest, Columns){
     table_t table;
@@ -119,4 +122,20 @@ TEST_F(TableTest, CreateWithFKConstraintsTableQuery){
                            "someId INTEGER REFERENCES `test` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT "
                            ");";
     ASSERT_EQ(trimmed, expected);
+}
+
+TEST_F(TableTest, CreateTables) {
+    auto err = myConn->createTables(true);
+    if (err) std::cout << std::string(err.value()) << std::endl;
+    ASSERT_FALSE(err);
+}
+
+TEST_F(TableTest, CreateIfExistsTables) {
+    auto err = myConn->createTables(true);
+    if (err) std::cout << std::string(err.value()) << std::endl;
+    ASSERT_FALSE(err);
+
+    err = myConn->createTables(true);
+    if (err) std::cout << std::string(err.value()) << std::endl;
+    ASSERT_FALSE(err);
 }

@@ -89,7 +89,7 @@ namespace trantor {
             sqlite3_stmt* stmt;
             std::optional<Error> error = std::nullopt;
 
-            Statement(Connection<Table*...> conn, std::string query) : conn{conn} {
+            Statement(Connection *conn, std::string query) : conn{conn} {
                 conn->_logger(LogLevel::Debug, "Prepared Statement");
                 conn->_logger(LogLevel::Debug, query.c_str());
 
