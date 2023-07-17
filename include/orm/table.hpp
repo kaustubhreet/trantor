@@ -81,6 +81,38 @@ namespace trantor{
 
             return ss.str();
         }
+
+        static std::string insertQuery() {
+            std::ostringstream ss;
+            ss << "INSERT INTO `" << tableName.value << "` (";
+
+            size_t queryColumns = numberOfColumns;
+            std::apply([&](const auto&... a) {
+                ([&]() {
+                    using column_t = std::remove_reference_t<decltype(a)>;
+                    if constexpr (column_t::isAutoIncColumn) {
+                        queryColumns--;
+                    } else {
+                        ss << "`" << column_t::name() << "`, ";
+                    }
+                }(), ...);
+            }, columns_t{});
+
+            std::string str = ss.str();
+            str.erase(str.end() - 2, str.end());
+
+            std::ostringstream ss2;
+            ss2 << ") VALUES (";
+            for (size_t i = 0; i < queryColumns; i++) {
+                if (i == queryColumns - 1) {
+                    ss2 << "?);";
+                } else  {
+                    ss2 << "?, ";
+                }
+            }
+
+            return str + ss2.str();
+        }
     };
 }
 
