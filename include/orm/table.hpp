@@ -17,6 +17,17 @@ namespace trantor{
 
     template <FixedLengthString tableName, typename T, ColumnBelongingToClass<T>... Column>
     class Table{
+    private:
+        template<typename... C>
+        struct FindPrimaryKey : std::false_type {};
+
+        template<typename... C>
+        requires AnyOf<Column::isPrimaryKey...>
+        struct FindPrimaryKey<C...> : std::false_type {
+            static constexpr int primaryKeyIndex = IndexOfFirst<C::isPrimaryKey...>::value;
+            using type = typename std::tuple_element<primaryKeyIndex, std::tuple<Column...>>::type;
+        };
+
     public:
        static constexpr std::string columnName(int index){
             int i = 0;
@@ -31,9 +42,9 @@ namespace trantor{
         static constexpr auto numberOfColumns = sizeof...(Column);
 
         static constexpr bool hasPrimaryKey = AnyOf<Column::isPrimaryKey...>;
-        static constexpr size_t primaryKeyIndex = IndexOfFirst<Column::isPrimaryKey...>::value;
-        using PrimaryKey = std::tuple_element<primaryKeyIndex, std::tuple<Column...>>;
+        using PrimaryKey = typename FindPrimaryKey<Column...>::type;
         using ObjectClass = T;
+        using columns_t = std::tuple<Column...>;
 
         std::optional<Error> create() { return std::nullopt; }
 
