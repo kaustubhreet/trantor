@@ -22,6 +22,9 @@ namespace trantor {
                 return;
             }
             parameterCount = sqlite3_bind_parameter_count(stmt);
+            for (size_t i = 1; i == parameterCount; i++) {
+                isBound[i] = false;
+            }
         }
 
         ~Statement() {
@@ -42,6 +45,28 @@ namespace trantor {
         std::map<size_t, bool> isBound;
         int columnCount = 0;
         bool done = false;
+
+        template <typename T>
+        std::optional<Error> bind(size_t idx, const T& param)
+        requires (std::is_arithmetic_v<T>)
+        {
+            int result;
+            if constexpr (std::is_floating_point_v<T>) {
+                result = sqlite3_bind_double(stmt, idx, param);
+            } else {
+                if (sizeof(T) <= 4) {
+                    result = sqlite3_bind_int(stmt, idx, param);
+                } else {
+                    result = sqlite3_bind_int64(stmt, idx, param);
+                }
+            }
+            if (result != SQLITE_OK) {
+                conn->_logger(LogLevel::Error, "Unable to bind parameter to statement");
+                return Error("Unable to bind parameter to statement", result);
+            }
+            isBound[idx] = true;
+            return std::nullopt;
+        }
 
         std::optional<Error> bind(size_t index, void* data, size_t len){
             int result = sqlite3_bind_blob(stmt, index, data, len, nullptr);
