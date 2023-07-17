@@ -66,30 +66,72 @@ namespace trantor {
 
         template<typename T, typename PrimaryKeyType>
         Maybe<T> Find(PrimaryKeyType id){
-            constexpr int index = IndexOfFirst<std::is_same<T, typename Table::ObjectClass>::value...>::value;
-            static_assert(index >= 0, "Connection does not contain ant table matching type T");
+            using table_t = typename TableForClass<T>::type;
 
-            using table = std::tuple_element<index, std::tuple<Table...>>;
-            static_assert(std::is_convertible<PrimaryKeyType, typename table::PrimaryKeyType::ObjectClass>::value,
-                    "Primary key type does not match the type specified in the definition of the table");
+            static_assert(table_t::hasPrimaryKey, "Cannot execute a find on a table without a primary key");
 
-            auto query = table::findQuery();
+            static_assert(std::is_convertible_v<PrimaryKeyType, typename table_t::PrimaryKey::MemberType>,
+                          "Primary key type does not match the type specified in the definition of the table");
+
+            typename table_t::PrimaryKey::MemberType pk = id;
+            auto query = table_t::findQuery();
             statement_t s = {this, query};
-            auto err = s.bind(1, &id, sizeof(id));
-
-            if(err)
-                return err;
-
+            if (s.error) {
+                return s.error.value();
+            }
+            std::optional<Error> err;
+            if constexpr (std::is_arithmetic_v<PrimaryKeyType>) {
+                err = s.bind(1, pk);
+            } else {
+                // TODO Fix this bind
+                err = s.bind(1 &pk, sizeof(pk));
+            }
+            /* err = s.bind(1, pk); */
+            if (err) {
+                return err.value();
+            }
             err = s.step();
+            if (err) {
+                return err.value();
+            }
+            if (s.done) {
+                return std::nullopt;
+            }
 
-            if(err)
-                return err;
+            if (s.columnCount != table_t::nColumns) {
+                            return Error("Unexpected number of columns returned by find query");
+                        }
+
+                        T record;
+                        size_t columnIdx = 0;
+                        std::apply([&](const auto&... a) {
+                            ([&]() {
+                                using column_t = std::remove_reference_t<decltype(a)>;
+                                if constexpr (column_t::publicColumn) {
+                                    s.readColumn(columnIdx++, column_t::getter(record));
+                                } else {
+                                    using value_t = typename column_t::MemberType;
+                                    value_t value;
+                        s.readColumn(columnIdx++, value);
+                        column_t::setter(record, value);
+                    }
+                }(), ...);
+            }, typename table_t::columns_t{});
+
+            return record;
 
         }
 
     private:
         friend class Statement<Connection, Table...>;
         using statement_t = Statement<Connection, Table...>;
+
+        template<class C>
+        struct TableForClass {
+            static constexpr int idx = IndexOfFirst<std::is_same<C, typename Table::ObjectClass>::value...>::value;
+            static_assert(idx >= 0, "Connection does not contain any table matching the type T");
+            using type = typename std::tuple_element<idx, std::tuple<Table...>>::type;
+        };
 
         Connection(const Connection&) = delete;
         Connection operator =(const Connection&) = delete;

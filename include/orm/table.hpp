@@ -76,7 +76,7 @@ namespace trantor{
         static std::string findQuery(){
             std::ostringstream ss;
             ss << "SELECT * FROM `" << tableName.value << "` "
-            << "WHERE `" << column_constraint::PrimaryKey<>::to_string()
+            << "WHERE `" << PrimaryKey::name
             << "` = ?;";
 
             return ss.str();
