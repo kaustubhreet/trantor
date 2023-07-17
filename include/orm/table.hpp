@@ -30,6 +30,11 @@ namespace trantor{
 
         static constexpr auto numberOfColumns = sizeof...(Column);
 
+        static constexpr bool hasPrimaryKey = AnyOf<Column::isPrimaryKey...>;
+        static constexpr size_t primaryKeyIndex = IndexOfFirst<Column::isPrimaryKey...>::value;
+        using PrimaryKey = std::tuple_element<primaryKeyIndex, std::tuple<Column...>>;
+        using ObjectClass = T;
+
         std::optional<Error> create() { return std::nullopt; }
 
         static std::string createTableQuery(bool ifNotExist) {

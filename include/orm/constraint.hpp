@@ -136,6 +136,18 @@ namespace trantor{
         template<conflict_t onConflict=conflict_t::ABORT>
         using PrimaryKeyDesc = ConstraintWithConflictClause<"PRIMARY KEY DESC", onConflict>;
 
+        template <typename T>
+        struct ConstraintIsPrimaryKey : std::false_type { };
+
+        template<auto T>
+        struct ConstraintIsPrimaryKey<PrimaryKey<T>> : std::true_type {};
+
+        template<auto T>
+        struct ConstraintIsPrimaryKey<PrimaryKeyAsc<T>> : std::true_type {};
+
+        template<auto T>
+        struct ConstraintIsPrimaryKey<PrimaryKeyDesc<T>> : std::true_type {};
+
 
 
     }

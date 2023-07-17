@@ -121,6 +121,8 @@ namespace trantor{
                       "Column template argument should be a pointer to a class member");
 
         using ObjectClass = find_column_type<decltype(M)>::klass;
+        static constexpr bool isPrimaryKey = AnyOf<ConstraintIsPrimaryKey<Constraint>::value...>;
+
 
         static constexpr const char* name(){
             return columnName.value;

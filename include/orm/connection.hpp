@@ -64,10 +64,27 @@ namespace trantor {
             return error;
         }
 
-        template<class T, typename PrimaryKeyType=int>
-        std::optional<Error> Find(PrimaryKeyType id) {
-            (void)id;
-            return std::nullopt;
+        template<typename T, typename PrimaryKeyType>
+        Maybe<T> Find(PrimaryKeyType id){
+            constexpr int index = IndexOfFirst<std::is_same<T, typename Table::ObjectClass>::value...>::value;
+            static_assert(index >= 0, "Connection does not contain ant table matching type T");
+
+            using table = std::tuple_element<index, std::tuple<Table...>>;
+            static_assert(std::is_convertible<PrimaryKeyType, typename table::PrimaryKeyType::ObjectClass>::value,
+                    "Primary key type does not match the type specified in the definition of the table");
+
+            auto query = table::findQuery();
+            statement_t s = {this, query};
+            auto err = s.bind(1, &id, sizeof(id));
+
+            if(err)
+                return err;
+
+            err = s.step();
+
+            if(err)
+                return err;
+
         }
 
     private:
