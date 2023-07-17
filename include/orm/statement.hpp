@@ -16,7 +16,7 @@ namespace trantor {
             int result = sqlite3_prepare_v2(conn->_db_handle, query.c_str(), query.size() + 1, &stmt, nullptr);
             if (result != SQLITE_OK) {
                 const char *str = sqlite3_errstr(result);
-                conn->_logger(LogLevel::Error, "Unable to initialize statment");
+                conn->_logger(LogLevel::Error, "Unable to initialize statement");
                 conn->_logger(LogLevel::Error, str);
                 error = Error("Unable to initialize statement", result);
                 return;
@@ -28,7 +28,7 @@ namespace trantor {
             int result = sqlite3_finalize(stmt);
             if (result != SQLITE_OK) {
                 const char *str = sqlite3_errstr(result);
-                conn->_logger(LogLevel::Error, "Unable to finalize statment");
+                conn->_logger(LogLevel::Error, "Unable to finalize statement");
                 conn->_logger(LogLevel::Error, str);
             }
         }
@@ -37,8 +37,11 @@ namespace trantor {
         friend Connection;
         Connection *conn;
         sqlite3_stmt *stmt;
-        int parameterCount;
-        int boundCount = 0;
+
+        size_t parameterCount;
+        std::map<size_t, bool> isBound;
+        int columnCount = 0;
+        bool done = false;
 
         std::optional<Error> bind(size_t index, void* data, size_t len){
             int result = sqlite3_bind_blob(stmt, index, data, len, nullptr);
@@ -47,10 +50,13 @@ namespace trantor {
                 conn->_logger(LogLevel::Error, "Unable to bind parameter to statement");
                 return Error("Unable to bind parameter to statement", result);
             }
+            std::cout << "Bind " << len << "\n";
+            isBound[index] = true;
+
             return std::nullopt;
         }
 
-        std::optional<Error>bind(const char* paramName, void* data, size_t len) {
+        std::optional<Error>bind(const char* paramName, const void* data, size_t len) {
             int idx = sqlite3_bind_parameter_index(stmt, paramName);
             if (idx <= 0) {
                 conn->_logger(LogLevel::Error, "Unable to bind parameter to statement, name not found");
@@ -59,15 +65,46 @@ namespace trantor {
             return bind(idx, data, len);
         }
 
+        std::optional<Error> rewind() {
+            int result = sqlite3_reset(stmt);
+            if (result != SQLITE_OK) {
+                conn->_logger(LogLevel::Error, "Unable to reset statement");
+                return Error( "Unable to reset statement", result);
+            }
+            done = false;
+        }
+
+        std::optional<Error> reset() {
+            auto err = rewind();
+            if (err) return err;
+
+            int result = sqlite3_clear_bindings(stmt);
+            if (result != SQLITE_OK) {
+                conn->_logger(LogLevel::Error, "Unable to clear bindings");
+                return Error( "Unable to clear bindings", result);
+            }
+            for (auto& [_, v] : isBound) v = false;
+
+            return std::nullopt;
+        }
+
         std::optional<Error> step() {
-            if (boundCount != parameterCount)
+            if (done) {
+                return Error("Query has run to completion");
+            }
+            if (std::any_of(isBound.begin(), isBound.end(),
+                            [](const auto& bound) { return !bound.second; } ))
                 return Error("Some parameters have not been found");
 
             int result = sqlite3_step(stmt);
-            if (result != SQLITE_OK && result != SQLITE_DONE) {
-                conn->_logger(LogLevel::Error, "Unable to execute statment");
-                return Error("Unable to execute statment", result);
+            if (result != SQLITE_OK && result != SQLITE_DONE && result != SQLITE_ROW) {
+                conn->_logger(LogLevel::Error, "Unable to execute statement");
+                return Error("Unable to execute statement", result);
             }
+
+            done = result == SQLITE_DONE;
+
+            columnCount = sqlite3_column_count(stmt);
 
             return std::nullopt;
 
