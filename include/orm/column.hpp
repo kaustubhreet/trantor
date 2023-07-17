@@ -1,6 +1,7 @@
 #pragma once
 
 #include <common.hpp>
+#include "constraint.hpp"
 #include <sstream>
 #include "types.hpp"
 
@@ -59,6 +60,7 @@ namespace trantor{
 
     public:
 
+        static constexpr bool publicColumn = false;
         using MemberType = SetterResolved::argType;
         using ObjectClass = SetterResolved::klass;
 
@@ -67,6 +69,7 @@ namespace trantor{
         }
 
         static constexpr trantor::sql_type_t SQLMemberType = trantor::MemberTypeToSqlType<MemberType>::value;
+        static constexpr bool isAutoIncColumn = AnyOf<column_constraint::ConstraintIsPrimaryKey<Constraint>::value...> && SQLMemberType == sql_type_t::INTEGER;
 
         static auto getter(auto obj){
             return (obj.*Getter)();
@@ -114,14 +117,16 @@ namespace trantor{
         };
 
     public:
-
+        static constexpr bool publicColumn = true;
         using MemberType = find_column_type<decltype(M)>::type;
 
         static_assert(!std::is_same<MemberType, std::false_type>::value,
                       "Column template argument should be a pointer to a class member");
 
         using ObjectClass = find_column_type<decltype(M)>::klass;
-        static constexpr bool isPrimaryKey = AnyOf<ConstraintIsPrimaryKey<Constraint>::value...>;
+        static constexpr sql_type_t SQLMemberType = MemberTypeToSqlType<MemberType>::value;
+        static constexpr bool isPrimaryKey = AnyOf<column_constraint::ConstraintIsPrimaryKey<Constraint>::value...>;
+        static constexpr bool isAutoIncColumn = AnyOf<column_constraint::ConstraintIsPrimaryKey<Constraint>::value...> && SQLMemberType == sql_type_t::INTEGER;
 
 
         static constexpr const char* name(){
@@ -148,8 +153,5 @@ namespace trantor{
 
             return qstr;
         }
-
-
-        static constexpr trantor::sql_type_t SQLMemberType = trantor::MemberTypeToSqlType<MemberType>::value;
     };
 }
