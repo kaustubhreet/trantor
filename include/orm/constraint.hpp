@@ -74,6 +74,12 @@ namespace trantor{
                 ss << "DEFAULT '" << value.value << "'";
                 return ss.str();
             }
+
+            friend std::ostream & operator<< (std::ostream &out, [[maybe_unused]] const Default& c)
+            {
+                out << to_string();
+                return out;
+            }
         };
 
         template<FixedLengthString value>
@@ -82,6 +88,12 @@ namespace trantor{
                 std::stringstream ss;
                 ss << "COLLATE '" << value.value << "'";
                 return ss.str();
+            }
+
+            friend std::ostream & operator<< (std::ostream &out, [[maybe_unused]] const Collate& c)
+            {
+                out << to_string();
+                return out;
             }
         };
 
@@ -110,6 +122,12 @@ namespace trantor{
 
                 return ss.str();
             }
+
+            friend std::ostream & operator<< (std::ostream &out, [[maybe_unused]] const ForeignKey& c)
+            {
+                out << to_string();
+                return out;
+            }
         };
 
         template<FixedLengthString constraint, conflict_t onConflict>
@@ -118,6 +136,12 @@ namespace trantor{
                 std::stringstream ss;
                 ss << constraint.value << " ON CONFLICT " << conflictStr(onConflict);
                 return ss.str();
+            }
+            friend std::ostream & operator<< (std::ostream &out,
+                                              [[maybe_unused]] const ConstraintWithConflictClause& c)
+            {
+                out << to_string();
+                return out;
             }
         };
 
@@ -147,8 +171,5 @@ namespace trantor{
 
         template<auto T>
         struct ConstraintIsPrimaryKey<PrimaryKeyDesc<T>> : std::true_type {};
-
-
-
     }
 }
