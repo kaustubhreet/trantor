@@ -2,6 +2,9 @@
 
 #include "common.hpp"
 #include <optional>
+#include <type_traits>
+#include <iterator>
+#include <cassert>
 
 namespace trantor {
     template<class Connection, class... Table>
@@ -46,79 +49,80 @@ namespace trantor {
         int columnCount = 0;
         bool done = false;
 
-        template <typename T>
-        std::optional<Error> bind(size_t idx, const T& param)
-        requires (std::is_arithmetic_v<T>)
+        template<ArithmeticT T>
+        [[nodiscard]]std::optional<Error> bind(size_t idx, const T &param)
+        //requires (std::is_arithmetic_v<T>)
         {
+            using unwrapped_t = typename remove_optional<T>::type;
+            const unwrapped_t *unwrapped;
+
             int result;
-            if constexpr (std::is_floating_point_v<T>) {
-                result = sqlite3_bind_double(stmt, idx, param);
-            } else {
-                if (sizeof(T) <= 4) {
-                    result = sqlite3_bind_int(stmt, idx, param);
+            bool boundNull = false;
+
+            if constexpr (IsOptional<T>()) {
+                if (!param.has_value()) {
+                    result = sqlite3_bind_null(stmt, idx);
+                    boundNull = true;
                 } else {
-                    result = sqlite3_bind_int64(stmt, idx, param);
+                    unwrapped = &param.value();
+                }
+            } else {
+                unwrapped = &param;
+            }
+
+            if (!boundNull) {
+                if constexpr (std::is_floating_point_v<unwrapped_t>) {
+                    result = sqlite3_bind_double(stmt, idx, *unwrapped);
+                } else {
+                    if (sizeof(T) <= 4) {
+                        result = sqlite3_bind_int(stmt, idx, *unwrapped);
+                    } else {
+                        result = sqlite3_bind_int64(stmt, idx, *unwrapped);
+                    }
                 }
             }
+
             if (result != SQLITE_OK) {
                 conn->_logger(LogLevel::Error, "Unable to bind parameter to statement");
-                return Error("Unable to bind parameter to statement", result);
+                return Error("Unable to bind parameter to statment", result);
             }
+
             isBound[idx] = true;
             return std::nullopt;
         }
 
-        std::optional<Error> bind(size_t index, void* data, size_t len){
-            int result = sqlite3_bind_blob(stmt, index, data, len, nullptr);
+        //[[nodiscard]]std::optional<Error> bind(size_t index, void* data, size_t len){
+        //std::optional<Error>bind(const char* paramName, const void* data, size_t len) {
 
-            if (result != SQLITE_OK) {
-                conn->_logger(LogLevel::Error, "Unable to bind parameter to statement");
-                return Error("Unable to bind parameter to statement", result);
-            }
-            std::cout << "Bind " << len << "\n";
-            isBound[index] = true;
-
-            return std::nullopt;
-        }
-
-        std::optional<Error>bind(const char* paramName, const void* data, size_t len) {
-            int idx = sqlite3_bind_parameter_index(stmt, paramName);
-            if (idx <= 0) {
-                conn->_logger(LogLevel::Error, "Unable to bind parameter to statement, name not found");
-                return Error("Unable to bind parameter to statement, name not found");
-            }
-            return bind(idx, data, len);
-        }
-
-        std::optional<Error> rewind() {
+        [[nodiscard]]std::optional<Error> rewind() {
             int result = sqlite3_reset(stmt);
             if (result != SQLITE_OK) {
                 conn->_logger(LogLevel::Error, "Unable to reset statement");
-                return Error( "Unable to reset statement", result);
+                return Error("Unable to reset statement", result);
             }
             done = false;
         }
 
-        std::optional<Error> reset() {
+        [[nodiscard]]std::optional<Error> reset() {
             auto err = rewind();
             if (err) return err;
 
             int result = sqlite3_clear_bindings(stmt);
             if (result != SQLITE_OK) {
                 conn->_logger(LogLevel::Error, "Unable to clear bindings");
-                return Error( "Unable to clear bindings", result);
+                return Error("Unable to clear bindings", result);
             }
-            for (auto& [_, v] : isBound) v = false;
+            for (auto &[_, v]: isBound) v = false;
 
             return std::nullopt;
         }
 
-        std::optional<Error> step() {
+        [[nodiscard]]std::optional<Error> step() {
             if (done) {
                 return Error("Query has run to completion");
             }
             if (std::any_of(isBound.begin(), isBound.end(),
-                            [](const auto& bound) { return !bound.second; } ))
+                            [](const auto &bound) { return !bound.second; }))
                 return Error("Some parameters have not been found");
 
             int result = sqlite3_step(stmt);
@@ -132,7 +136,79 @@ namespace trantor {
             columnCount = sqlite3_column_count(stmt);
 
             return std::nullopt;
-
         }
+
+        template<ContinuousContainer T>
+        [[nodiscard]] std::optional<Error> readColumn(size_t idx, T &outParam) {
+            int dataType = sqlite3_column_type(stmt, idx);
+            switch (dataType) {
+                case SQLITE_INTEGER:
+                case SQLITE_FLOAT: {
+                    return Error("Tried to read an arithmetic column into a container");
+                }
+                case SQLITE_TEXT:
+                case SQLITE_BLOB: {
+                    const void *data = sqlite3_column_blob(stmt, idx);
+                    size_t len = sqlite3_column_bytes(stmt, idx);
+
+                    break;
+                }
+                case SQLITE_NULL: {
+                    break;
+                }
+                default: {
+                    // this should never happen :pray:
+                    assert(false);
+                    return Error("Unknown SQL type encountered, something isn't implemented yet");
+                }
+            }
+            return std::nullopt;
+        }
+
+        template<ArithmeticT T>
+        [[nodiscard]] std::optional<Error> readColumn(size_t idx, T &outParam) {
+            int dataType = sqlite3_column_type(stmt, idx);
+            switch (dataType) {
+                case SQLITE_INTEGER: {
+                    if (sizeof(outParam) <= 4) {
+                        outParam = sqlite3_column_int(stmt, idx);
+                    } else {
+                        outParam = sqlite3_column_int64(stmt, idx);
+                    }
+                    break;
+                }
+                case SQLITE_FLOAT: {
+                    outParam = sqlite3_column_double(stmt, idx);
+                    break;
+                }
+                case SQLITE_TEXT:
+                case SQLITE_BLOB: {
+                    return Error("Tried to read an arithmetic column into a container");
+                    size_t len = sqlite3_column_bytes(stmt, idx);
+                    if (len > sizeof(T)) {
+                        return Error("Param does not have enough space to fit column contents");
+                    }
+                    const void *data = sqlite3_column_blob(stmt, idx);
+                    memcpy(&outParam, data, len);
+                    break;
+                }
+                case SQLITE_NULL: {
+                    if constexpr (is_optional<T>::value) {
+                        if constexpr (IsOptional<T>()) {
+                            outParam = std::nullopt;
+                        } else {
+                            outParam = 0;
+                        }
+                        break;
+                    }
+                    default: {
+                        // this should never happen :pray:
+                        assert(false);
+                        return Error("Unknown SQL type encountered, something isn't implemented yet");
+                    }
+                }
+                    return std::nullopt;
+            }
+        };
     };
 }

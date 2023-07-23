@@ -19,7 +19,7 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-set(test_sources "")
+set(test_sources "" src/query_test.cpp)
 file(GLOB_RECURSE test_sources "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp")
 add_executable(runTests ${test_sources})
 target_link_libraries(runTests pthread trantor GTest::gtest_main)

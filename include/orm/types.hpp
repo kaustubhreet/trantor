@@ -27,11 +27,9 @@ namespace trantor{
                     return "REAL";
                 }
 
-                return "not a supported type";
-
+                default:
+                    return "not a supported type";
         }
-
-        return "type not supported";
     }
 
 
@@ -52,14 +50,14 @@ namespace trantor{
             case order_t::DESC: {
                  return "DESC";
             }
-
-            return "order not supported";
+            default:
+                return "order not supported";
 
         }
     }
 
 
-    template<typename T>
+/*    template<typename T>
     struct MemberTypeToSqlType{
         static constexpr const sql_type_t value = sql_type_t::BLOB;
     };
@@ -75,6 +73,32 @@ DEFINE_MEMBER_TO_SQL_TYPE(float, REAL);
 DEFINE_MEMBER_TO_SQL_TYPE(bool, INTEGER);
 DEFINE_MEMBER_TO_SQL_TYPE(void*, BLOB);
 DEFINE_MEMBER_TO_SQL_TYPE(std::string, TEXT);
-#undef DEFINE_MEMBER_TO_SQL
+#undef DEFINE_MEMBER_TO_SQL*/
+
+    template<typename T>
+    struct MemberTypeToSqlType {
+    private:
+        static constexpr sql_type_t findType() {
+            using type = typename remove_optional<T>::type;
+            if constexpr (IsArithmetic<type>()) {
+                if (std::is_floating_point_v<type>) {
+                    return sql_type_t::REAL;
+                } else {
+                    return sql_type_t::INTEGER;
+                }
+            } else if constexpr (IsString<type>()) {
+                return sql_type_t::TEXT;
+            } else if constexpr (IsContinuousContainer<type>()) {
+                return sql_type_t::BLOB;
+            } else {
+                static_assert(std::is_same_v<T, std::false_type>,
+                              "Member type is not convertable to an sql type. "
+                              "Please use only arithmetic types or containers with continuous memory, "
+                              "or std::optional containing either type");
+            }
+        }
+    public:
+        static constexpr sql_type_t value = findType();
+    };
 
 }

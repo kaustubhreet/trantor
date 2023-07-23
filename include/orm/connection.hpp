@@ -33,6 +33,7 @@ namespace trantor {
             }
             return Connection(db_handle, logger);
         }
+
         ~Connection() {
             int result = sqlite3_close_v2(_db_handle);
             if (result != SQLITE_OK) {
@@ -41,13 +42,17 @@ namespace trantor {
                 _logger(LogLevel::Error, str);
             }
         }
+
         Connection(Connection&& old) {
             _logger = old._logger;
             old._logger = [](auto...) {};
             _db_handle = old._db_handle;
             old._db_handle = nullptr;
         };
+
         Connection& operator =(Connection&&) = default;
+
+
         std::optional<Error> createTables(bool ifNotExist = true) {
             std::optional<Error> error = std::nullopt;
             // TODO make this a transaction
@@ -65,7 +70,7 @@ namespace trantor {
         }
 
         template<typename T, typename PrimaryKeyType>
-        Maybe<T> Find(PrimaryKeyType id){
+        Maybe<std::optional<T>> find(const PrimaryKeyType& id) {
             using table_t = typename TableForClass<T>::type;
 
             static_assert(table_t::hasPrimaryKey, "Cannot execute a find on a table without a primary key");
@@ -79,14 +84,9 @@ namespace trantor {
             if (s.error) {
                 return s.error.value();
             }
-            std::optional<Error> err;
-            if constexpr (std::is_arithmetic_v<PrimaryKeyType>) {
-                err = s.bind(1, pk);
-            } else {
-                // TODO Fix this bind
-                err = s.bind(1 &pk, sizeof(pk));
-            }
-            /* err = s.bind(1, pk); */
+
+            std::optional<Error> err = s.bind(1, pk);
+
             if (err) {
                 return err.value();
             }
@@ -98,28 +98,72 @@ namespace trantor {
                 return std::nullopt;
             }
 
-            if (s.columnCount != table_t::nColumns) {
-                            return Error("Unexpected number of columns returned by find query");
-                        }
+            if (s.columnCount != table_t::numberOfColumns) {
+                return Error("Unexpected number of columns returned by find query");
+            }
 
-                        T record;
-                        size_t columnIdx = 0;
-                        std::apply([&](const auto&... a) {
-                            ([&]() {
-                                using column_t = std::remove_reference_t<decltype(a)>;
-                                if constexpr (column_t::publicColumn) {
-                                    s.readColumn(columnIdx++, column_t::getter(record));
-                                } else {
-                                    using value_t = typename column_t::MemberType;
-                                    value_t value;
-                        s.readColumn(columnIdx++, value);
+            T record;
+            size_t columnIdx = 0;
+            std::apply([&](const auto&... a) {
+                ([&]() {
+                    using column_t = std::remove_reference_t<decltype(a)>;
+                    if constexpr (column_t::publicColumn) {
+                        err = s.readColumn(columnIdx++, column_t::getter(record));
+                    } else {
+                        using value_t = typename column_t::MemberType;
+                        value_t value;
+                        err = s.readColumn(columnIdx++, value);
                         column_t::setter(record, value);
                     }
                 }(), ...);
             }, typename table_t::columns_t{});
 
+            if (err) {
+                return err.value();
+            }
+
             return record;
 
+        }
+
+        template<class T>
+        std::optional<Error> insert(const T& record) {
+            using table_t = typename TableForClass<T>::type;
+
+            auto query = table_t::insertQuery();
+            statement_t s = {this, query};
+            if (s.error) {
+                return s.error.value();
+            }
+
+            int i = 1;
+            std::optional<Error> err;
+            std::apply([&](const auto&... a) {
+                ([&]() {
+                    if (err) return;
+                    using column_t = std::remove_reference_t<decltype(a)>;
+
+                    if constexpr (!column_t::isAutoIncColumn) {
+                        auto& val = column_t::getter(record);
+                        //err = s.bind(i++, val);
+                    }
+                }(), ...);
+            }, typename table_t::columns_t{});
+
+            if (err) {
+                return err;
+            }
+
+            err = s.step();
+            if (err) {
+                return err;
+            }
+
+            if (!s.done) {
+                return Error("Insert query didn't run to completion");
+            }
+
+            return std::nullopt;
         }
 
     private:
@@ -135,6 +179,7 @@ namespace trantor {
 
         Connection(const Connection&) = delete;
         Connection operator =(const Connection&) = delete;
+
         Connection(sqlite3* db_handle, Logger logger) : _db_handle(db_handle) {
             if (logger) _logger = logger;
             else _logger = [](auto...) {};

@@ -135,4 +135,87 @@ namespace trantor {
     public:
         static constexpr int value = _impl();
     };
+
+    template<typename T>
+    struct is_vector : std::false_type  { };
+
+    template<typename T, typename A>
+    struct is_vector<std::vector<T, A>> : std::true_type {};
+
+    template<typename T>
+    struct is_basic_string : std::false_type  { };
+
+    template<typename CharT, typename Traits, typename Allocator>
+    struct is_basic_string<std::basic_string<CharT, Traits, Allocator>> : std::true_type {};
+
+    template<typename T>
+    struct remove_optional : std::type_identity<T> {};
+
+    template<typename T>
+    struct remove_optional<std::optional<T>> : std::type_identity<T> {};
+
+    template<typename T>
+    struct is_array : std::false_type  { };
+
+    template<typename T, auto s>
+    struct is_array<std::array<T, s>> : std::true_type {};
+
+    template<typename T>
+    static constexpr bool IsContinuousContainer() {
+        using plain = remove_optional<std::remove_cvref_t<T>>::type;
+        return is_vector<plain>::value || is_basic_string<plain>::value || is_array<plain>::value;
+    }
+
+    template<typename T>
+    concept ContinuousContainer = IsContinuousContainer<T>();
+    template<typename T>
+    static constexpr bool IsArithmetic() {
+        using plain = remove_optional<std::remove_cvref_t<T>>::type;
+        return std::is_arithmetic_v<plain>;
+    }
+
+    template<typename T>
+    concept ArithmeticT = IsArithmetic<T>();
+
+    template<typename T>
+    struct is_optional : std::false_type  { };
+
+    template<typename T>
+    struct is_optional<std::optional<T>> : std::true_type {};
+
+    template<typename T>
+    static constexpr bool IsOptional() {
+        using plain = std::remove_cvref_t<T>;
+        return is_optional<plain>::value;
+    }
+
+    template<typename T>
+    concept OptionalT = IsOptional<T>();
+
+    template<typename T>
+    struct is_string : std::false_type  { };
+
+    template<typename CharT, typename Traits, typename Allocator>
+    struct is_string<std::basic_string<CharT, Traits, Allocator>> : std::true_type {};
+
+    template <typename T>
+    static constexpr bool IsString() {
+        using plain = remove_optional<std::remove_cvref_t<T>>::type;
+        return is_string<plain>::value;
+    }
+
+    // unique tuple https://stackoverflow.com/a/57528226
+    namespace __unique_tuple_detail {
+        template <typename T, typename... Ts>
+        struct unique : std::type_identity<T> {};
+
+        template <typename... Ts, typename U, typename... Us>
+        struct unique<std::tuple<Ts...>, U, Us...>
+                : std::conditional_t<(std::is_same_v<U, Ts> || ...)
+                        , unique<std::tuple<Ts...>, Us...>
+                        , unique<std::tuple<Ts..., U>, Us...>> {};
+    };
+
+    template <typename... Ts>
+    using unique_tuple = typename __unique_tuple_detail::unique<std::tuple<>, Ts...>::type;
 }

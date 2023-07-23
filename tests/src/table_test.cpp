@@ -3,16 +3,38 @@
 #include "trantor.hpp"
 #include <regex>
 
-
 using namespace trantor;
 
-void logger(trantor::LogLevel level, const char* msg) {
+void loggerTableTest(trantor::LogLevel level, const char* msg) {
     std::cout << "connection logger (" << (int)level << "): ";
     std::cout << msg << std::endl;
 }
 
-
 struct Object{
+    int _id = 0;
+    int _someId = 0;
+    float _someFloat;
+    std::string _name;
+    std::string _someText;
+    auto getId() { return _id; }
+    void setId(int id) { _id = id; }
+    auto getName() { return _name; }
+    void setName(std::string name) { _name = name; }
+};
+
+struct Object2{
+    int _id = 0;
+    int _someId = 0;
+    float _someFloat;
+    std::string _name;
+    std::string _someText;
+    auto getId() { return _id; }
+    void setId(int id) { _id = id; }
+    auto getName() { return _name; }
+    void setName(std::string name) { _name = name; }
+};
+
+struct Object3{
     int _id = 0;
     int _someId = 0;
     float _someFloat;
@@ -32,10 +54,19 @@ using tablepriv_t = Table<"test", Object,
         ColumnP<"id", &Object::getId, &Object::setId>,
         ColumnP<"name", &Object::getName, &Object::setName>>;
 
+using tablepriv_t_Obj2 = Table<"test_with_obj2", Object2,
+        ColumnP<"id", &Object2::getId, &Object2::setId>,
+        ColumnP<"name", &Object2::getName, &Object2::setName>>;
+
 using table_with_constraint_t = Table<"test_constraints", Object,
     Column<"id", &Object::_id, column_constraint::PrimaryKey<conflict_t::ABORT>>,
     Column<"name", &Object::_name, column_constraint::NotNull<>, column_constraint::Unique<>>,
     Column<"text", &Object::_someText, column_constraint::Unique<conflict_t::REPLACE>> >;
+
+using table_with_constraint_t_Obj3 = Table<"test_constraints_with_obj3", Object3,
+        Column<"id", &Object3::_id, column_constraint::PrimaryKey<conflict_t::ABORT>>,
+        Column<"name", &Object3::_name, column_constraint::NotNull<>, column_constraint::Unique<>>,
+        Column<"text", &Object3::_someText, column_constraint::Unique<conflict_t::REPLACE>> >;
 
 using table_with_fk_constraint_t = Table<"test_fk_constraints", Object,
     Column<"id", &Object::_id, column_constraint::PrimaryKey<conflict_t::ABORT>>,
@@ -43,13 +74,16 @@ using table_with_fk_constraint_t = Table<"test_fk_constraints", Object,
     Column<"text", &Object::_someText, column_constraint::Unique<conflict_t::REPLACE>>,
     Column<"someId", &Object::_someId, column_constraint::ForeignKey<column_constraint::Reference<"test", "id">, action_t::CASCADE, action_t::RESTRICT> > >;
 
-using MyConnection = Connection<table_t, tablepriv_t, table_with_constraint_t, table_with_fk_constraint_t>;
+
+
+using MyConnection = Connection<table_t, tablepriv_t, table_with_constraint_t, table_with_fk_constraint_t,
+                    tablepriv_t_Obj2, table_with_constraint_t_Obj3>;
 
 
 class TableTest : public ::testing::Test {
 protected:
     void SetUp() override{
-        auto createdConn = MyConnection::create("C:/sqlite3/test.db", 0, 0, &logger);
+        auto createdConn = MyConnection::create("C:/sqlite3/test.db", 0, 0, &loggerTableTest);
         if(!std::holds_alternative<MyConnection>(createdConn)) {
             throw "Unable to open connection";
         }

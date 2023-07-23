@@ -46,7 +46,7 @@ namespace trantor{
         using ObjectClass = T;
         using columns_t = std::tuple<Column...>;
 
-        std::optional<Error> create() { return std::nullopt; }
+        //std::optional<Error> create() { return std::nullopt; }
 
         static std::string createTableQuery(bool ifNotExist) {
             std::ostringstream query;
@@ -60,7 +60,7 @@ namespace trantor{
                 << Column::name()<< " "
                 << sqlTypesStr(Column::SQLMemberType);
 
-                auto constraints = Column::creationConstraints();
+                auto constraints = Column::constraintCreationQuery();
                 if(!constraints.empty()){
                     query << " " << constraints;
                 }
