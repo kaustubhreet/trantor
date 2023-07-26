@@ -166,6 +166,33 @@ namespace trantor {
             return std::nullopt;
         }
 
+        template<class T, typename PrimaryKeyType>
+        std::optional<Error> deleteRecord(const PrimaryKeyType& id) {
+            using table_t = typename TableForClass<T>::type;
+
+            static_assert(table_t::hasPrimaryKey, "Cannot execute a delete on a table without a primary key");
+
+            static_assert(std::is_convertible_v<PrimaryKeyType, typename table_t::PrimaryKey::MemberType>,
+                          "Primary key type does not match the type specified in the definition of the table");
+
+            typename table_t::PrimaryKey::MemberType pk = id;
+            auto query = table_t::deleteQuery();
+            statement_t s = {this, query};
+            if (s.error) {
+                return s.error.value();
+            }
+            std::optional<Error> err = s.bind(1, pk);
+            if (err) {
+                return err.value();
+            }
+            err = s.step();
+            if (err) {
+                return err.value();
+            }
+
+            return std::nullopt;
+        }
+
     private:
         friend class Statement<Connection, Table...>;
         using statement_t = Statement<Connection, Table...>;
