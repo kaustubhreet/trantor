@@ -31,27 +31,16 @@ namespace trantor {
                 }
                 return Error("Unable to open sqlite connection", result);
             }
-            return Connection(db_handle, logger);
+            return Connection({db_handle}, logger);
         }
 
-        ~Connection() {
-            int result = sqlite3_close_v2(_db_handle);
-            if (result != SQLITE_OK) {
-                const char* str = sqlite3_errstr(result);
-                _logger(LogLevel::Error, "Unable to destruct connection");
-                _logger(LogLevel::Error, str);
-            }
-        }
-
-        Connection(Connection&& old) {
-            _logger = old._logger;
-            old._logger = [](auto...) {};
-            _db_handle = old._db_handle;
-            old._db_handle = nullptr;
-        };
+        Connection(Connection&& old) = default;
 
         Connection& operator =(Connection&&) = default;
 
+        Connection(const Connection&) = delete;
+
+        Connection operator =(const Connection&) = delete;
 
         std::optional<Error> createTables(bool ifNotExist = true) {
             std::optional<Error> error = std::nullopt;
@@ -197,6 +186,8 @@ namespace trantor {
         friend class Statement<Connection, Table...>;
         using statement_t = Statement<Connection, Table...>;
 
+        using _db_handle_ptr = std::unique_ptr<sqlite3, std::function<void(sqlite3*)>>;
+
         template<class C>
         struct TableForClass {
             static constexpr int idx = IndexOfFirst<std::is_same<C, typename Table::ObjectClass>::value...>::value;
@@ -204,15 +195,23 @@ namespace trantor {
             using type = typename std::tuple_element<idx, std::tuple<Table...>>::type;
         };
 
-        Connection(const Connection&) = delete;
-        Connection operator =(const Connection&) = delete;
-
         Connection(sqlite3* db_handle, Logger logger) : _db_handle(db_handle) {
             if (logger) _logger = logger;
             else _logger = [](auto...) {};
+
+            _db_handle = {db_handle, [logger](sqlite3* handle) {
+                int result = sqlite3_close_v2(handle);
+                if (result != SQLITE_OK) {
+                    const char* str = sqlite3_errstr(result);
+                    if (logger) {
+                        logger(LogLevel::Error, "Unable to destruct connection");
+                        logger(LogLevel::Error, str);
+                    }
+                }
+            }};
         }
 
-        sqlite3* _db_handle;
+        _db_handle_ptr _db_handle;
         Logger _logger = nullptr;
     };
 };
