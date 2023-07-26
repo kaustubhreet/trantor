@@ -1,5 +1,11 @@
 #pragma once
 
+/**
+    * @file table.hpp
+    * @brief Contains routines for creating tables and querying them.
+    *
+    */
+
 #include "../common.hpp"
 #include "column.hpp"
 #include "constraint.hpp"
@@ -112,6 +118,14 @@ namespace trantor{
             }
 
             return str + ss2.str();
+        }
+
+        static std::string deleteQuery() {
+            std::ostringstream ss;
+            ss << "DELETE FROM `" << tableName.value << "` ";
+            ss << "WHERE `" << PrimaryKey::name() << "` = ?;";
+
+            return ss.str();
         }
     };
 }
