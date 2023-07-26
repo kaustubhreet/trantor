@@ -138,27 +138,39 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>MemberType</b> = fin
 <tr class="memitem:aff8738a6c5855714b1a1067cc1a2b195"><td class="memItemLeft" align="right" valign="top"><a id="aff8738a6c5855714b1a1067cc1a2b195" name="aff8738a6c5855714b1a1067cc1a2b195"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>ObjectClass</b> = find_column_type&lt; decltype(M)&gt;::klass</td></tr>
 <tr class="separator:aff8738a6c5855714b1a1067cc1a2b195"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81ee0c473b31dd8e879ecf6770940e6e"><td class="memItemLeft" align="right" valign="top"><a id="a81ee0c473b31dd8e879ecf6770940e6e" name="a81ee0c473b31dd8e879ecf6770940e6e"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>constraints_t</b> = typename <a class="el" href="structtrantor_1_1____constraint__t__detail_1_1constraints__t.html">__constraint_t_detail::constraints_t</a>&lt; MemberType, Constraint... &gt;::type</td></tr>
+<tr class="separator:a81ee0c473b31dd8e879ecf6770940e6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a7cd24574e750d6b17e42cbeb54919ade"><td class="memItemLeft" align="right" valign="top"><a id="a7cd24574e750d6b17e42cbeb54919ade" name="a7cd24574e750d6b17e42cbeb54919ade"></a>
 static constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> ()</td></tr>
 <tr class="separator:a7cd24574e750d6b17e42cbeb54919ade"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aceda066f8f4238944e36ff96ad57f713"><td class="memItemLeft" align="right" valign="top"><a id="aceda066f8f4238944e36ff96ad57f713" name="aceda066f8f4238944e36ff96ad57f713"></a>
-static auto&#160;</td><td class="memItemRight" valign="bottom"><b>getter</b> (auto obj)</td></tr>
-<tr class="separator:aceda066f8f4238944e36ff96ad57f713"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf2eaaa7dff9ffe28da83adc897adad4"><td class="memItemLeft" align="right" valign="top"><a id="acf2eaaa7dff9ffe28da83adc897adad4" name="acf2eaaa7dff9ffe28da83adc897adad4"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>setter</b> (auto obj, auto arg)</td></tr>
-<tr class="separator:acf2eaaa7dff9ffe28da83adc897adad4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c4a69d8eaca5fa228c917714fc8858f"><td class="memItemLeft" align="right" valign="top"><a id="a0c4a69d8eaca5fa228c917714fc8858f" name="a0c4a69d8eaca5fa228c917714fc8858f"></a>
-static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>creationConstraints</b> ()</td></tr>
-<tr class="separator:a0c4a69d8eaca5fa228c917714fc8858f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a309b8715dbd7aa7e1e245df12f7614"><td class="memItemLeft" align="right" valign="top"><a id="a4a309b8715dbd7aa7e1e245df12f7614" name="a4a309b8715dbd7aa7e1e245df12f7614"></a>
+static auto &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getter</b> (auto &amp;obj)</td></tr>
+<tr class="separator:a4a309b8715dbd7aa7e1e245df12f7614"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f2058c978d6288f1db0b46d5a1610db"><td class="memItemLeft" align="right" valign="top"><a id="a3f2058c978d6288f1db0b46d5a1610db" name="a3f2058c978d6288f1db0b46d5a1610db"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>setter</b> (auto &amp;obj, auto arg)</td></tr>
+<tr class="separator:a3f2058c978d6288f1db0b46d5a1610db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17e1ef01ccc22f34a191b727ee380247"><td class="memItemLeft" align="right" valign="top"><a id="a17e1ef01ccc22f34a191b727ee380247" name="a17e1ef01ccc22f34a191b727ee380247"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>constraintCreationQuery</b> ()</td></tr>
+<tr class="separator:a17e1ef01ccc22f34a191b727ee380247"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a70cd25cc003f8cfe108757c231be985d"><td class="memItemLeft" align="right" valign="top"><a id="a70cd25cc003f8cfe108757c231be985d" name="a70cd25cc003f8cfe108757c231be985d"></a>
-static constexpr trantor::sql_type_t&#160;</td><td class="memItemRight" valign="bottom"><b>SQLMemberType</b> = <a class="el" href="structtrantor_1_1_member_type_to_sql_type.html">trantor::MemberTypeToSqlType</a>&lt;MemberType&gt;::value</td></tr>
-<tr class="separator:a70cd25cc003f8cfe108757c231be985d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab84f505a2735724dadd163eeb2e971ee"><td class="memItemLeft" align="right" valign="top"><a id="ab84f505a2735724dadd163eeb2e971ee" name="ab84f505a2735724dadd163eeb2e971ee"></a>
+static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>publicColumn</b> = true</td></tr>
+<tr class="separator:ab84f505a2735724dadd163eeb2e971ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbba349c57088109708b5ff9a7a91bb5"><td class="memItemLeft" align="right" valign="top"><a id="afbba349c57088109708b5ff9a7a91bb5" name="afbba349c57088109708b5ff9a7a91bb5"></a>
+static constexpr sql_type_t&#160;</td><td class="memItemRight" valign="bottom"><b>SQLMemberType</b> = <a class="el" href="structtrantor_1_1_member_type_to_sql_type.html">MemberTypeToSqlType</a>&lt;MemberType&gt;::value</td></tr>
+<tr class="separator:afbba349c57088109708b5ff9a7a91bb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fa71ec87d861817afcfd6c3c32bd129"><td class="memItemLeft" align="right" valign="top"><a id="a3fa71ec87d861817afcfd6c3c32bd129" name="a3fa71ec87d861817afcfd6c3c32bd129"></a>
+static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPrimaryKey</b> = AnyOf&lt;<a class="el" href="structtrantor_1_1column__constraint_1_1_constraint_is_primary_key.html">column_constraint::ConstraintIsPrimaryKey</a>&lt;Constraint&gt;::value...&gt;</td></tr>
+<tr class="separator:a3fa71ec87d861817afcfd6c3c32bd129"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d8600871156ce9f39dc8e13f58e493d"><td class="memItemLeft" align="right" valign="top"><a id="a3d8600871156ce9f39dc8e13f58e493d" name="a3d8600871156ce9f39dc8e13f58e493d"></a>
+static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>isAutoIncColumn</b> = AnyOf&lt;<a class="el" href="structtrantor_1_1column__constraint_1_1_constraint_is_primary_key.html">column_constraint::ConstraintIsPrimaryKey</a>&lt;Constraint&gt;::value...&gt; &amp;&amp; SQLMemberType == sql_type_t::INTEGER</td></tr>
+<tr class="separator:a3d8600871156ce9f39dc8e13f58e493d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/orm/<a class="el" href="column_8hpp_source.html">column.hpp</a></li>

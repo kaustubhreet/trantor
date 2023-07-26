@@ -124,6 +124,7 @@ $(document).ready(function(){initNavTree('classtrantor_1_1_connection.html','');
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classtrantor_1_1_connection-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">trantor::Connection&lt; Table &gt; Class Template Reference</div></div>
 </div><!--header-->
@@ -140,12 +141,26 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a529a1941058c9ddadd7a79b25c1e5ba8"><td class="memItemLeft" align="right" valign="top"><a id="a529a1941058c9ddadd7a79b25c1e5ba8" name="a529a1941058c9ddadd7a79b25c1e5ba8"></a>
 std::optional&lt; <a class="el" href="structtrantor_1_1_error.html">Error</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>createTables</b> (bool ifNotExist=true)</td></tr>
 <tr class="separator:a529a1941058c9ddadd7a79b25c1e5ba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac57c1af751dceb20a5c74bc93bc494a9"><td class="memTemplParams" colspan="2"><a id="ac57c1af751dceb20a5c74bc93bc494a9" name="ac57c1af751dceb20a5c74bc93bc494a9"></a>
+template&lt;typename T , typename PrimaryKeyType &gt; </td></tr>
+<tr class="memitem:ac57c1af751dceb20a5c74bc93bc494a9"><td class="memTemplItemLeft" align="right" valign="top">Maybe&lt; std::optional&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>find</b> (const PrimaryKeyType &amp;id)</td></tr>
+<tr class="separator:ac57c1af751dceb20a5c74bc93bc494a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d0b3ec60644d72e510be6c39f466891"><td class="memTemplParams" colspan="2"><a id="a5d0b3ec60644d72e510be6c39f466891" name="a5d0b3ec60644d72e510be6c39f466891"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a5d0b3ec60644d72e510be6c39f466891"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="structtrantor_1_1_error.html">Error</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert</b> (const T &amp;record)</td></tr>
+<tr class="separator:a5d0b3ec60644d72e510be6c39f466891"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ae8a374e058ff8995f206032ee8d094e5"><td class="memItemLeft" align="right" valign="top"><a id="ae8a374e058ff8995f206032ee8d094e5" name="ae8a374e058ff8995f206032ee8d094e5"></a>
 static Maybe&lt; <a class="el" href="classtrantor_1_1_connection.html">Connection</a>&lt; Table... &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>create</b> (const char *fileName, int flags=0, const char *zVfs=nullptr, Logger logger=nullptr)</td></tr>
 <tr class="separator:ae8a374e058ff8995f206032ee8d094e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a0a06012d42891d5421f42604cf468169"><td class="memItemLeft" align="right" valign="top"><a id="a0a06012d42891d5421f42604cf468169" name="a0a06012d42891d5421f42604cf468169"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>Statement&lt; Connection, Table... &gt;</b></td></tr>
+<tr class="separator:a0a06012d42891d5421f42604cf468169"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/orm/<a class="el" href="connection_8hpp_source.html">connection.hpp</a></li>

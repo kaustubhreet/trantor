@@ -121,7 +121,8 @@ $(document).ready(function(){initNavTree('classtrantor_1_1_table.html',''); init
 
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="classtrantor_1_1_table-members.html">List of all members</a>  </div>
@@ -129,11 +130,17 @@ $(document).ready(function(){initNavTree('classtrantor_1_1_table.html',''); init
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a8d7da93606d8a7d633c05ea1695a3a82"><td class="memItemLeft" align="right" valign="top"><a id="a8d7da93606d8a7d633c05ea1695a3a82" name="a8d7da93606d8a7d633c05ea1695a3a82"></a>
-std::optional&lt; <a class="el" href="structtrantor_1_1_error.html">Error</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>create</b> ()</td></tr>
-<tr class="separator:a8d7da93606d8a7d633c05ea1695a3a82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:af7263abf4315561fdea4ba62b4df2b46"><td class="memItemLeft" align="right" valign="top"><a id="af7263abf4315561fdea4ba62b4df2b46" name="af7263abf4315561fdea4ba62b4df2b46"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>PrimaryKey</b> = typename FindPrimaryKey&lt; Column... &gt;::type</td></tr>
+<tr class="separator:af7263abf4315561fdea4ba62b4df2b46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acce8b3d28a443eebcbc521f31c97dd0d"><td class="memItemLeft" align="right" valign="top"><a id="acce8b3d28a443eebcbc521f31c97dd0d" name="acce8b3d28a443eebcbc521f31c97dd0d"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>ObjectClass</b> = T</td></tr>
+<tr class="separator:acce8b3d28a443eebcbc521f31c97dd0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcf61285d4c4017462b7004204ac127b"><td class="memItemLeft" align="right" valign="top"><a id="adcf61285d4c4017462b7004204ac127b" name="adcf61285d4c4017462b7004204ac127b"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>columns_t</b> = std::tuple&lt; Column... &gt;</td></tr>
+<tr class="separator:adcf61285d4c4017462b7004204ac127b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -146,12 +153,18 @@ static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>createT
 <tr class="memitem:a26ed5fa4d8ef4b2a54eafa04975f69d2"><td class="memItemLeft" align="right" valign="top"><a id="a26ed5fa4d8ef4b2a54eafa04975f69d2" name="a26ed5fa4d8ef4b2a54eafa04975f69d2"></a>
 static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>findQuery</b> ()</td></tr>
 <tr class="separator:a26ed5fa4d8ef4b2a54eafa04975f69d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b98d2505ff438ad04d7d69490248858"><td class="memItemLeft" align="right" valign="top"><a id="a6b98d2505ff438ad04d7d69490248858" name="a6b98d2505ff438ad04d7d69490248858"></a>
+static std::string&#160;</td><td class="memItemRight" valign="bottom"><b>insertQuery</b> ()</td></tr>
+<tr class="separator:a6b98d2505ff438ad04d7d69490248858"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a4e41aeb458d9734e04354c310df580a5"><td class="memItemLeft" align="right" valign="top"><a id="a4e41aeb458d9734e04354c310df580a5" name="a4e41aeb458d9734e04354c310df580a5"></a>
 static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>numberOfColumns</b> = sizeof...(<a class="el" href="classtrantor_1_1_column.html">Column</a>)</td></tr>
 <tr class="separator:a4e41aeb458d9734e04354c310df580a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0fd07d67857a8c6fb3b76311a682454"><td class="memItemLeft" align="right" valign="top"><a id="ac0fd07d67857a8c6fb3b76311a682454" name="ac0fd07d67857a8c6fb3b76311a682454"></a>
+static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasPrimaryKey</b> = AnyOf&lt;Column::isPrimaryKey...&gt;</td></tr>
+<tr class="separator:ac0fd07d67857a8c6fb3b76311a682454"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/orm/<a class="el" href="table_8hpp_source.html">table.hpp</a></li>
