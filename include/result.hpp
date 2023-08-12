@@ -18,6 +18,34 @@ namespace trantor{
 
         Result(Result&& r)  noexcept = default;
         Result& operator = (Result&&)  noexcept = default;
+
+        bool isError() const{
+            return std::holds_alternative<Error>(result);
+        }
+
+        operator const Error& () const{
+            return std::get<Error>(result);
+        }
+
+        operator const T& () const{
+            return std::get<T>(result);
+        }
+
+        const Error& error() const{
+            return *this;
+        }
+
+        const T& value() const{
+            return *this;
+        }
+
+        operator T&& (){
+            return std::move(std::get<T>(result));
+        }
+
+        T&& value(){
+            return *this;
+        }
     };
 
     template <typename T>
