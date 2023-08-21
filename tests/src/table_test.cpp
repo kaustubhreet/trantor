@@ -5,7 +5,7 @@
 
 using namespace trantor;
 
-void loggerTableTest(trantor::LogLevel level, const char* msg) {
+static inline void loggerTableTest(trantor::LogLevel level, const char* msg) {
     std::cout << "connection logger (" << (int)level << "): ";
     std::cout << msg << std::endl;
 }
@@ -83,6 +83,7 @@ using MyConnection = Connection<table_t, tablepriv_t, table_with_constraint_t, t
 class TableTest : public ::testing::Test {
 protected:
     void SetUp() override{
+        std::cout<<"trying to setup connection from test suite:"<<std::endl;
         auto createdConn = MyConnection::create("C:/sqlite3/test.db", 0, 0, &loggerTableTest);
         if(!std::holds_alternative<MyConnection>(createdConn)) {
             throw "Unable to open connection";

@@ -128,7 +128,7 @@ $(document).ready(function(){initNavTree('table_8hpp_source.html',''); initResiz
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;../common.hpp&quot;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;column.hpp&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;constraint.hpp&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;types.hpp&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="types_8hpp.html">types.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
@@ -238,15 +238,24 @@ $(document).ready(function(){initNavTree('table_8hpp_source.html',''); initResiz
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>            <span class="keywordflow">return</span> str + ss2.str();</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        }</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    };</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>}</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="keyword">static</span> std::string deleteQuery() {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            std::ostringstream ss;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            ss &lt;&lt; <span class="stringliteral">&quot;DELETE FROM `&quot;</span> &lt;&lt; tableName.value &lt;&lt; <span class="stringliteral">&quot;` &quot;</span>;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            ss &lt;&lt; <span class="stringliteral">&quot;WHERE `&quot;</span> &lt;&lt; PrimaryKey::name() &lt;&lt; <span class="stringliteral">&quot;` = ?;&quot;</span>;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            <span class="keywordflow">return</span> ss.str();</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        }</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    };</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>}</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
 <div class="ttc" id="aclasstrantor_1_1_column_html"><div class="ttname"><a href="classtrantor_1_1_column.html">trantor::Column</a></div><div class="ttdef"><b>Definition</b> column.hpp:124</div></div>
 <div class="ttc" id="aclasstrantor_1_1_table_html"><div class="ttname"><a href="classtrantor_1_1_table.html">trantor::Table</a></div><div class="ttdef"><b>Definition</b> table.hpp:25</div></div>
 <div class="ttc" id="aconcepttrantor_1_1_column_belonging_to_class_html"><div class="ttname"><a href="concepttrantor_1_1_column_belonging_to_class.html">trantor::ColumnBelongingToClass</a></div><div class="ttdef"><b>Definition</b> table.hpp:22</div></div>
-<div class="ttc" id="astructtrantor_1_1_index_of_first_html"><div class="ttname"><a href="structtrantor_1_1_index_of_first.html">trantor::IndexOfFirst</a></div><div class="ttdef"><b>Definition</b> common.hpp:124</div></div>
+<div class="ttc" id="astructtrantor_1_1_index_of_first_html"><div class="ttname"><a href="structtrantor_1_1_index_of_first.html">trantor::IndexOfFirst</a></div><div class="ttdef"><b>Definition</b> common.hpp:161</div></div>
+<div class="ttc" id="atypes_8hpp_html"><div class="ttname"><a href="types_8hpp.html">types.hpp</a></div><div class="ttdoc">Contains utility functions and type traits related to SQL operations.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

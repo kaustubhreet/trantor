@@ -163,13 +163,13 @@ Static Public Attributes</h2></td></tr>
 static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>publicColumn</b> = true</td></tr>
 <tr class="separator:ab84f505a2735724dadd163eeb2e971ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbba349c57088109708b5ff9a7a91bb5"><td class="memItemLeft" align="right" valign="top"><a id="afbba349c57088109708b5ff9a7a91bb5" name="afbba349c57088109708b5ff9a7a91bb5"></a>
-static constexpr sql_type_t&#160;</td><td class="memItemRight" valign="bottom"><b>SQLMemberType</b> = <a class="el" href="structtrantor_1_1_member_type_to_sql_type.html">MemberTypeToSqlType</a>&lt;MemberType&gt;::value</td></tr>
+static constexpr <a class="el" href="types_8hpp.html#adfeb83cc8b9d748598dc99100146c2e5">sql_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>SQLMemberType</b> = <a class="el" href="structtrantor_1_1_member_type_to_sql_type.html">MemberTypeToSqlType</a>&lt;MemberType&gt;::value</td></tr>
 <tr class="separator:afbba349c57088109708b5ff9a7a91bb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3fa71ec87d861817afcfd6c3c32bd129"><td class="memItemLeft" align="right" valign="top"><a id="a3fa71ec87d861817afcfd6c3c32bd129" name="a3fa71ec87d861817afcfd6c3c32bd129"></a>
 static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPrimaryKey</b> = AnyOf&lt;<a class="el" href="structtrantor_1_1column__constraint_1_1_constraint_is_primary_key.html">column_constraint::ConstraintIsPrimaryKey</a>&lt;Constraint&gt;::value...&gt;</td></tr>
 <tr class="separator:a3fa71ec87d861817afcfd6c3c32bd129"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d8600871156ce9f39dc8e13f58e493d"><td class="memItemLeft" align="right" valign="top"><a id="a3d8600871156ce9f39dc8e13f58e493d" name="a3d8600871156ce9f39dc8e13f58e493d"></a>
-static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>isAutoIncColumn</b> = AnyOf&lt;<a class="el" href="structtrantor_1_1column__constraint_1_1_constraint_is_primary_key.html">column_constraint::ConstraintIsPrimaryKey</a>&lt;Constraint&gt;::value...&gt; &amp;&amp; SQLMemberType == sql_type_t::INTEGER</td></tr>
+static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>isAutoIncColumn</b> = AnyOf&lt;<a class="el" href="structtrantor_1_1column__constraint_1_1_constraint_is_primary_key.html">column_constraint::ConstraintIsPrimaryKey</a>&lt;Constraint&gt;::value...&gt; &amp;&amp; SQLMemberType == <a class="el" href="types_8hpp.html#adfeb83cc8b9d748598dc99100146c2e5a5d5cd46919fa987731fb2edefe0f2a0c">sql_type_t::INTEGER</a></td></tr>
 <tr class="separator:a3d8600871156ce9f39dc8e13f58e493d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>

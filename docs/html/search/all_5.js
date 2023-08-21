@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['loglevel_0',['LogLevel',['../common_8hpp.html#a9ebf925c921bb2c8f3e3e32a0a990cc0',1,'trantor']]]
+  ['fixedlengthstring_0',['FixedLengthString',['../structtrantor_1_1_fixed_length_string.html',1,'trantor']]],
+  ['foreignkey_1',['ForeignKey',['../structtrantor_1_1column__constraint_1_1_foreign_key.html',1,'trantor::column_constraint']]]
 ];

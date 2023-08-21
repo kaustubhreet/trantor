@@ -27,25 +27,46 @@ namespace trantor {
         Debug = 3,
     };
 
-    using Logger = std::function<void(LogLevel, const char *)>;
+    /**
+     * @brief Defines a type alias for a function pointer that takes a @ref trantor::LogLevel enumeration value
+     * and a C-string as arguments and returns void
+     */
+
+    using Logger = std::function<void(LogLevel, const char*)>;
 
     /**
      * @struct Error
      *
-     * @brief Provides error logging and maintaining methods
+     * @brief Represents an error with associated error message and SQLite result code.
      */
 
     struct Error {
         /**
-         * @brief Constructor
-         * @param err               error message
-         * @param sqlite_result     Code from the SQLite descriptor
-         *
+         * @brief Constructor for Error.
+         * @param err               The error message.
+         * @param sqlite_result     The SQLite result code (default is SQLITE_OK).
          */
         Error(const char *const err, int sqlite_result=SQLITE_OK) : err(err), sqlite_result(sqlite_result) {}
 
-        const char *err;
-        int sqlite_result;
+        const char *err;        ///< The error message.
+        int sqlite_result;      ///< The SQLite result code.
+
+        /**
+        * @brief Stream insertion operator to output an Error.
+        * @param out    The output stream.
+        * @param e      The Error to be output.
+        * @return The output stream after writing the Error.
+        */
+
+        friend std::ostream& operator<< (std::ostream &out, const Error& e){
+            out << std::string(e.err);
+            if (e.sqlite_result != SQLITE_OK) {
+                const char* sqlErr = sqlite3_errstr(e.sqlite_result);
+                out <<": " + std::string(sqlErr);
+            }
+
+            return out;
+        }
 
         /**
          * @brief Parenthesis Operator Overload to output an elegant error string
@@ -53,11 +74,7 @@ namespace trantor {
          */
         operator std::string() const {
             std::ostringstream out;
-            out << std::string(err);
-            if (sqlite_result != SQLITE_OK) {
-                const char* sqlErr = sqlite3_errstr(sqlite_result);
-                out <<": " + std::string(sqlErr);
-            }
+            out << *this;
             return out.str();
         }
     };
@@ -66,8 +83,12 @@ namespace trantor {
     using Maybe = std::variant<Error, T>;
 
     /**
-     * @brief Abstraction to store names of tables and columns
-     * @tparam N denotes the size of input size
+     * @brief A templated structure to store a fixed-length character array.
+     *
+     * This structure provides a way to store a fixed-length character array of size N.
+     * It is particularly useful for storing the names of tables and columns.
+     *
+     * @tparam N The size of the fixed-length character array.
      */
     template<size_t N>
     struct FixedLengthString {
@@ -99,6 +120,14 @@ namespace trantor {
         return name;
     }
 
+    /**
+    * @brief Appends string representations of variadic elements to an output stream,
+    * separated by specified delimiter.
+    *
+    * @tparam T         Pack of types representing elements whose string representations are to be appended.
+    * @param ss         The output string stream to which the string representations will be appended.
+    * @param delim      The delimiter used to separate the string representations.
+    */
     template<typename... T>
     auto appendToStringStream(std::ostringstream &ss, const char *delim) {
         std::array<std::string, sizeof...(T)> strings = {T::to_string()...};
@@ -106,6 +135,14 @@ namespace trantor {
                   std::ostream_iterator<std::string>(ss, delim));
     }
 
+    /**
+     * @brief Appends fixed-length string values to an output stream,
+     * separated by a specified delimiter.
+     *
+     * @tparam string       Pack of `FixedLengthString` objects representing values to be appended.
+     * @param ss            The output string stream to which the string values will be appended.
+     * @param delim         The delimiter used to separate the string values.
+     */
     template<FixedLengthString...string>
     requires requires { (sizeof(string.value) + ...); }
     void appendToStringStream(std::ostringstream &ss, const char *delim) {
@@ -160,14 +197,41 @@ namespace trantor {
     template<typename T, auto s>
     struct is_array<std::array<T, s>> : std::true_type {};
 
+    /**
+     * @brief Checks whether a given type is a continuous container type.
+     * A continuous container is one that can store a sequence of
+     * elements and provides a continuous memory layout.
+     *
+     * @tparam T    The type to be checked.
+     * @return `true` if the type is a continuous container type, `false` otherwise.
+     */
     template<typename T>
     static constexpr bool IsContinuousContainer() {
         using plain = remove_optional<std::remove_cvref_t<T>>::type;
         return is_vector<plain>::value || is_basic_string<plain>::value || is_array<plain>::value;
     }
 
+    /**
+     * @concept{ContinuousContainer}
+     *
+     * @brief Concept for checking if a type is a continuous container.
+     *
+     * This concept provides a more intuitive way to check if a type is a
+     * continuous container using the `ContinuousContainer` template function.
+     *
+     * @tparam T The type to be checked.
+     */
     template<typename T>
     concept ContinuousContainer = IsContinuousContainer<T>();
+
+    /**
+     * @brief Checks whether a given type is an arithmetic type.
+     * An arithmetic type is one that represents a numeric value
+     * and supports arithmetic operations.
+     *
+     * @tparam T The type to be checked.
+     * @return `true` if the type is an arithmetic type, `false` otherwise.
+     */
     template<typename T>
     static constexpr bool IsArithmetic() {
         using plain = remove_optional<std::remove_cvref_t<T>>::type;

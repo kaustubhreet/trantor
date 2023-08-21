@@ -37,8 +37,10 @@ var annotated_dup =
       [ "is_vector", "structtrantor_1_1is__vector.html", null ],
       [ "is_vector< std::vector< T, A > >", "structtrantor_1_1is__vector_3_01std_1_1vector_3_01_t_00_01_a_01_4_01_4.html", null ],
       [ "MemberTypeToSqlType", "structtrantor_1_1_member_type_to_sql_type.html", null ],
+      [ "OptionalResult", "structtrantor_1_1_optional_result.html", null ],
       [ "remove_optional", "structtrantor_1_1remove__optional.html", null ],
       [ "remove_optional< std::optional< T > >", "structtrantor_1_1remove__optional_3_01std_1_1optional_3_01_t_01_4_01_4.html", null ],
+      [ "Result", "structtrantor_1_1_result.html", null ],
       [ "Statement", "classtrantor_1_1_statement.html", null ],
       [ "Table", "classtrantor_1_1_table.html", null ]
     ] ]

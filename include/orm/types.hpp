@@ -1,14 +1,35 @@
+/**
+ * @file types.hpp
+ * @brief Contains utility functions and type traits related to SQL operations.
+ *
+ * This file defines enums, functions, and template structures that are useful
+ * for working with SQL types, ordering, and type conversions.
+ */
+
 #pragma once
 
 namespace trantor{
+
+    /**
+     * @enum sql_type_t
+     * @brief Enumerates various SQL data types.
+     *
+     * This enumeration provides a set of SQL data types that can be used for
+     * defining columns in database tables.
+     */
     enum class sql_type_t{
-        INTEGER,
-        TEXT,
-        BLOB,
-        NUMERIC,
-        REAL
+        INTEGER,     /**< Integer data type */
+        TEXT,        /**< Text data type */
+        BLOB,        /**< Binary large object data type */
+        NUMERIC,     /**< Numeric data type */
+        REAL         /**< Real (floating-point) data type */
     };
 
+    /**
+     * @brief Converts an sql_type_t value to its corresponding string representation.
+     * @param t     The sql_type_t value to be converted.
+     * @return The string representation of the sql_type_t value.
+     */
     static consteval const char* sqlTypesStr(sql_type_t t) {
         switch (t) {
                 case sql_type_t::INTEGER:{
@@ -32,13 +53,24 @@ namespace trantor{
         }
     }
 
-
+    /**
+     * @enum order_t
+     * @brief Enumerates various SQL ordering options.
+     *
+     * This enumeration provides options for specifying the ordering of
+     * database query results.
+     */
     enum class order_t{
         NONE,
         ASC,
         DESC
     };
 
+    /**
+     * @brief Converts an order_t value to its corresponding string representation.
+     * @param t     The order_t value to be converted.
+     * @return The string representation of the order_t value.
+     */
     static constexpr const char* orderStr(order_t t){
         switch (t) {
             case order_t::NONE: {
@@ -56,25 +88,14 @@ namespace trantor{
         }
     }
 
-
-/*    template<typename T>
-    struct MemberTypeToSqlType{
-        static constexpr const sql_type_t value = sql_type_t::BLOB;
-    };
-
-#define DEFINE_MEMBER_TO_SQL_TYPE(memberType, sqlType) \
-    template<> \
-    struct MemberTypeToSqlType<memberType>{ \
-        static constexpr const sql_type_t value = sql_type_t::sqlType; \
-    };
-
-DEFINE_MEMBER_TO_SQL_TYPE(int, INTEGER);
-DEFINE_MEMBER_TO_SQL_TYPE(float, REAL);
-DEFINE_MEMBER_TO_SQL_TYPE(bool, INTEGER);
-DEFINE_MEMBER_TO_SQL_TYPE(void*, BLOB);
-DEFINE_MEMBER_TO_SQL_TYPE(std::string, TEXT);
-#undef DEFINE_MEMBER_TO_SQL*/
-
+    /**
+     * @struct MemberTypeToSqlType
+     * @brief Maps C++ member types to their corresponding SQL data types.
+     * @tparam T    The C++ type to be mapped to an SQL data type.
+     *
+     * It uses type traits and conditional
+     * compilation to determine the appropriate SQL data type.
+     */
     template<typename T>
     struct MemberTypeToSqlType {
     private:
@@ -98,7 +119,8 @@ DEFINE_MEMBER_TO_SQL_TYPE(std::string, TEXT);
             }
         }
     public:
+        /** The SQL data type value corresponding to the C++ type. */
         static constexpr sql_type_t value = findType();
     };
 
-}
+}// namespace trantor

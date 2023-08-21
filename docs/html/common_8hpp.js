@@ -20,10 +20,14 @@ var common_8hpp =
     [ "trantor::ContinuousContainer", "concepttrantor_1_1_continuous_container.html", null ],
     [ "trantor::ArithmeticT", "concepttrantor_1_1_arithmetic_t.html", null ],
     [ "trantor::OptionalT", "concepttrantor_1_1_optional_t.html", null ],
+    [ "trantor::", "concepttrantor_1_1.html", null ],
+    [ "Logger", "common_8hpp.html#a9fcf502979b65d783669f2f0f797eb62", null ],
     [ "LogLevel", "common_8hpp.html#a9ebf925c921bb2c8f3e3e32a0a990cc0", [
       [ "Error", "common_8hpp.html#a9ebf925c921bb2c8f3e3e32a0a990cc0a902b0d55fddef6f8d651fe1035b7d4bd", null ],
       [ "Warning", "common_8hpp.html#a9ebf925c921bb2c8f3e3e32a0a990cc0a0eaadb4fcb48a0a0ed7bc9868be9fbaa", null ],
       [ "Info", "common_8hpp.html#a9ebf925c921bb2c8f3e3e32a0a990cc0a4059b0251f66a18cb56f544728796875", null ],
       [ "Debug", "common_8hpp.html#a9ebf925c921bb2c8f3e3e32a0a990cc0aa603905470e2a5b8c13e96b579ef0dba", null ]
-    ] ]
+    ] ],
+    [ "appendToStringStream", "common_8hpp.html#af4a0206abe531bd8fecc4ea28243ac47", null ],
+    [ "appendToStringStream", "common_8hpp.html#a2a2cdf019de088d70e36ada98ef460e9", null ]
 ];

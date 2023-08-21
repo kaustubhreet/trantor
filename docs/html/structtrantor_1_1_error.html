@@ -123,20 +123,21 @@ $(document).ready(function(){initNavTree('structtrantor_1_1_error.html',''); ini
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="structtrantor_1_1_error-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">trantor::Error Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Provides error logging and maintaining methods.  
+<p>Represents an error with associated error message and SQLite result code.  
  <a href="structtrantor_1_1_error.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="common_8hpp_source.html">common.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3b2f9812989b8332fc638aa30e0d40b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtrantor_1_1_error.html#a3b2f9812989b8332fc638aa30e0d40b5">Error</a> (const char *const err, int sqlite_result=SQLITE_OK)</td></tr>
-<tr class="memdesc:a3b2f9812989b8332fc638aa30e0d40b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
+<tr class="memitem:a3b2f9812989b8332fc638aa30e0d40b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtrantor_1_1_error.html#a3b2f9812989b8332fc638aa30e0d40b5">Error</a> (const char *const <a class="el" href="structtrantor_1_1_error.html#a3b986d8cf87d28d0faa21d27a2196ed0">err</a>, int <a class="el" href="structtrantor_1_1_error.html#a90ed1becbe7cc1e3830243db9cf4f80b">sqlite_result</a>=SQLITE_OK)</td></tr>
+<tr class="memdesc:a3b2f9812989b8332fc638aa30e0d40b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for <a class="el" href="structtrantor_1_1_error.html" title="Represents an error with associated error message and SQLite result code.">Error</a>.  <br /></td></tr>
 <tr class="separator:a3b2f9812989b8332fc638aa30e0d40b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada026ebbd632d7a217f8697a4cd14970"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtrantor_1_1_error.html#ada026ebbd632d7a217f8697a4cd14970">operator std::string</a> () const</td></tr>
 <tr class="memdesc:ada026ebbd632d7a217f8697a4cd14970"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parenthesis Operator Overload to output an elegant error string.  <br /></td></tr>
@@ -146,13 +147,21 @@ Public Member Functions</h2></td></tr>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a3b986d8cf87d28d0faa21d27a2196ed0"><td class="memItemLeft" align="right" valign="top"><a id="a3b986d8cf87d28d0faa21d27a2196ed0" name="a3b986d8cf87d28d0faa21d27a2196ed0"></a>
 const char *&#160;</td><td class="memItemRight" valign="bottom"><b>err</b></td></tr>
+<tr class="memdesc:a3b986d8cf87d28d0faa21d27a2196ed0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The error message. <br /></td></tr>
 <tr class="separator:a3b986d8cf87d28d0faa21d27a2196ed0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90ed1becbe7cc1e3830243db9cf4f80b"><td class="memItemLeft" align="right" valign="top"><a id="a90ed1becbe7cc1e3830243db9cf4f80b" name="a90ed1becbe7cc1e3830243db9cf4f80b"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>sqlite_result</b></td></tr>
+<tr class="memdesc:a90ed1becbe7cc1e3830243db9cf4f80b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The SQLite result code. <br /></td></tr>
 <tr class="separator:a90ed1becbe7cc1e3830243db9cf4f80b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a83a490d8d6ec997cb50e2d2100e166cf"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtrantor_1_1_error.html#a83a490d8d6ec997cb50e2d2100e166cf">operator&lt;&lt;</a> (std::ostream &amp;out, const <a class="el" href="structtrantor_1_1_error.html">Error</a> &amp;e)</td></tr>
+<tr class="memdesc:a83a490d8d6ec997cb50e2d2100e166cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stream insertion operator to output an <a class="el" href="structtrantor_1_1_error.html" title="Represents an error with associated error message and SQLite result code.">Error</a>.  <br /></td></tr>
+<tr class="separator:a83a490d8d6ec997cb50e2d2100e166cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Provides error logging and maintaining methods. </p>
+<div class="textblock"><p>Represents an error with associated error message and SQLite result code. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3b2f9812989b8332fc638aa30e0d40b5" name="a3b2f9812989b8332fc638aa30e0d40b5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3b2f9812989b8332fc638aa30e0d40b5">&#9670;&#160;</a></span>Error()</h2>
@@ -188,11 +197,11 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>sqlite_result</b></td>
 </table>
 </div><div class="memdoc">
 
-<p>Constructor. </p>
+<p>Constructor for <a class="el" href="structtrantor_1_1_error.html" title="Represents an error with associated error message and SQLite result code.">Error</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">err</td><td>error message </td></tr>
-    <tr><td class="paramname">sqlite_result</td><td>Code from the SQLite descriptor </td></tr>
+    <tr><td class="paramname">err</td><td>The error message. </td></tr>
+    <tr><td class="paramname">sqlite_result</td><td>The SQLite result code (default is SQLITE_OK). </td></tr>
   </table>
   </dd>
 </dl>
@@ -225,6 +234,53 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>sqlite_result</b></td>
 
 <p>Parenthesis Operator Overload to output an elegant error string. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::string error </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Friends And Related Symbol Documentation</h2>
+<a id="a83a490d8d6ec997cb50e2d2100e166cf" name="a83a490d8d6ec997cb50e2d2100e166cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83a490d8d6ec997cb50e2d2100e166cf">&#9670;&#160;</a></span>operator&lt;&lt;</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::ostream &amp; operator&lt;&lt; </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream &amp;&#160;</td>
+          <td class="paramname"><em>out</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structtrantor_1_1_error.html">Error</a> &amp;&#160;</td>
+          <td class="paramname"><em>e</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Stream insertion operator to output an <a class="el" href="structtrantor_1_1_error.html" title="Represents an error with associated error message and SQLite result code.">Error</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out</td><td>The output stream. </td></tr>
+    <tr><td class="paramname">e</td><td>The <a class="el" href="structtrantor_1_1_error.html" title="Represents an error with associated error message and SQLite result code.">Error</a> to be output. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The output stream after writing the <a class="el" href="structtrantor_1_1_error.html" title="Represents an error with associated error message and SQLite result code.">Error</a>. </dd></dl>
 
 </div>
 </div>
