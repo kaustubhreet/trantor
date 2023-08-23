@@ -40,3 +40,42 @@ auto connection = trantor::Connection<ObjectTable>("./path/to/my/data.db");
 ```
 The connection template accepts a list of tables, and should contain all the tables
 that your application is going to work with.
+
+___
+### Connection options
+The connection constructor can take additional options, `flags` and `z_vfs`, these
+arguments are forwarded directly to SQLite.
+
+The default flags are `SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE`
+
+[You can read about them here](https://www.sqlite.org/capi3ref.html#sqlite3_open)
+
+#### Logger
+It is also possible to pass a function to the connection when it is created where logs
+can be sent. This is useful for debugging, but probably shouldn't be used in production.
+```cpp
+using connection_t = Connection<table1, table2, table3, //etc...
+
+auto connection = connection_t("mydata.db", 0, nullptr, [](auto level, const auto& msg) {
+    if (trantor::log_level::Error == level)
+        std::cerr << "Ooops: " << msg;
+    else
+        std::cout << msg;
+});
+```
+
+Logs will be sent at two levels, `Error` & `Debug`
+
+`Error` logs will include most errors that cause an exception.
+
+`Debug` will include information about statement preparation, and raw queries
+that are actually sent to the database.
+
+___
+
+### Multithreading
+
+This is currently not well tested but in theory it should work fine as long as
+you follow the golden rule:
+
+**:warning: 1 connection per thread**
